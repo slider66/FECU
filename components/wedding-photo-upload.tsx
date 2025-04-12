@@ -123,7 +123,7 @@ export function WeddingPhotoUpload() {
                   <div className="rounded-full bg-rose-100 p-3 mb-2">
                     <ImageIcon className="h-6 w-6 text-rose-500" />
                   </div>
-                  <p className="text-sm font-medium mb-1">
+                  <p className="text-sm font-medium mb-1 text-rose-400">
                     Click to select a photo
                   </p>
                   <p className="text-xs text-gray-500">
