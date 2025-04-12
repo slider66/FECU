@@ -18,9 +18,9 @@ export default function Home() {
             <HeartIcon className="h-6 w-6 text-rose-400 ml-2" />
           </div>
           <p className="text-lg text-gray-600 mb-2 font-serif">
-            Our Wedding Celebration
+            Vores bryllupsfest
           </p>
-          <p className="text-sm text-gray-500">April 15, 2025</p>
+          <p className="text-sm text-gray-500">15. april 2025</p>
         </header>
 
         {/* Hero Image */}
@@ -35,7 +35,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end">
             <div className="p-4 text-white">
               <p className="font-serif text-xl">
-                Thank you for celebrating with us!
+                Tak for at du deltager til vores bryllup!
               </p>
             </div>
           </div>
@@ -44,17 +44,17 @@ export default function Home() {
         {/* Call to Action */}
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 mb-8 text-center animate-fade-in">
           <h2 className="text-xl font-serif mb-3 text-gray-800">
-            Share Your Memories
+            Del dine minder
           </h2>
           <p className="text-gray-600 mb-6">
-            Help us capture all the special moments from our wedding day
+            Hjælp os med at optage alle de specielle øjeblikke fra vores bryllup
           </p>
 
           <div className="flex flex-col gap-4">
             <Link href="/upload" className="w-full">
               <Button className="w-full bg-rose-500 hover:bg-rose-600 transition-all">
                 <Camera className="mr-2 h-4 w-4" />
-                Upload Photos
+                Upload billeder
               </Button>
             </Link>
 
@@ -63,7 +63,7 @@ export default function Home() {
                 variant="outline"
                 className="w-full border-rose-200 text-rose-600 hover:bg-rose-50 transition-all"
               >
-                View Gallery
+                Se galleri
               </Button>
             </Link>
           </div>
@@ -71,7 +71,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="text-center text-sm text-gray-500 animate-fade-in">
-          <p>Made with love for our special day</p>
+          <p>Lavet med kærlighed til vores specielle dag</p>
         </footer>
       </div>
     </main>

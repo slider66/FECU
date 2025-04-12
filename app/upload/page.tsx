@@ -20,10 +20,10 @@ export default function UploadPage() {
             </div>
           </Link>
           <h2 className="text-xl font-serif mb-1 text-gray-800">
-            Upload Your Photos
+            Upload dine billeder
           </h2>
           <p className="text-sm text-gray-500">
-            Share your favorite moments from our celebration
+            Del dine yndlings øjeblikke fra vores bryllup
           </p>
         </header>
 
@@ -36,7 +36,7 @@ export default function UploadPage() {
         <div className="flex justify-center mb-8">
           <Link href="/gallery">
             <Button variant="link" className="text-rose-600">
-              View Gallery
+              Se galleri
             </Button>
           </Link>
         </div>
