@@ -23,16 +23,16 @@ export default async function GalleryPage() {
             </div>
           </Link>
           <h2 className="text-xl font-serif mb-1 text-gray-800">
-            Wedding Gallery
+            Bryllupsgalleri
           </h2>
           <p className="text-sm text-gray-500 mb-4">
-            Memories from our special day
+            Minder fra vores særlige dag
           </p>
 
           <Link href="/upload" className="inline-block">
             <Button size="sm" className="bg-rose-500 hover:bg-rose-600">
               <Upload className="mr-2 h-4 w-4" />
-              Add Photos
+              Tilføj billeder
             </Button>
           </Link>
         </header>

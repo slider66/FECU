@@ -7,7 +7,8 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 type Photo = {
   id: string
-  url: string
+  path: string
+  filename: string
   createdAt: string
 }
 
@@ -21,8 +22,12 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
   if (photos.length === 0) {
     return (
       <div className="text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg">
-        <p className="text-gray-500 mb-2">No photos have been uploaded yet.</p>
-        <p className="text-sm text-gray-400">Be the first to share a memory!</p>
+        <p className="text-gray-500 mb-2">
+          Der er ikke uploadet nogen billeder endnu.
+        </p>
+        <p className="text-sm text-gray-400">
+          Vær den første til at dele et minde!
+        </p>
       </div>
     )
   }
@@ -37,8 +42,8 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
             onClick={() => setSelectedPhoto(photo)}
           >
             <Image
-              src={photo.url || "/placeholder.svg"}
-              alt="Wedding photo"
+              src={photo.path || "/placeholder.svg"}
+              alt="Bryllupsbillede"
               fill
               className="object-cover"
             />
@@ -54,8 +59,8 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
           {selectedPhoto && (
             <div className="relative w-full aspect-[4/3] md:aspect-[16/9]">
               <Image
-                src={selectedPhoto.url || "/placeholder.svg"}
-                alt="Wedding photo"
+                src={selectedPhoto.path || "/placeholder.svg"}
+                alt="Bryllupsbillede"
                 fill
                 className="object-contain"
                 priority

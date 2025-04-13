@@ -26,12 +26,12 @@ export function WeddingPhotoUpload() {
     if (!selectedFile) return
 
     if (!selectedFile.type.startsWith("image/")) {
-      setError("Please select an image file")
+      setError("Vælg venligst en billedfil")
       return
     }
 
     if (selectedFile.size > 10 * 1024 * 1024) {
-      setError("Image must be less than 10MB")
+      setError("Billedet skal være mindre end 10MB")
       return
     }
 
@@ -53,7 +53,7 @@ export function WeddingPhotoUpload() {
       // Refresh the gallery data
       router.refresh()
     } catch (err) {
-      setError("Failed to upload photo. Please try again.")
+      setError("Upload af billedet mislykkedes. Prøv venligst igen.")
       console.error(err)
     } finally {
       setUploading(false)
@@ -67,9 +67,10 @@ export function WeddingPhotoUpload() {
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100 mb-4">
             <Check className="h-6 w-6 text-green-600" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-1">Thank you!</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-1">Mange tak!</h3>
           <p className="text-gray-500 mb-4">
-            Your photo has been uploaded successfully.
+            Dit billede er blevet uploadet, og en notifikation er sendt til
+            brudeparret!
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button
@@ -77,14 +78,14 @@ export function WeddingPhotoUpload() {
               onClick={() => setSuccess(false)}
               className="mt-2"
             >
-              Upload another photo
+              Upload et andet billede
             </Button>
             <Button
               variant="secondary"
               onClick={() => router.push("/gallery")}
               className="mt-2 bg-rose-100 hover:bg-rose-200 text-rose-700"
             >
-              View gallery
+              Se galleri
             </Button>
           </div>
         </div>
@@ -124,10 +125,10 @@ export function WeddingPhotoUpload() {
                     <ImageIcon className="h-6 w-6 text-rose-500" />
                   </div>
                   <p className="text-sm font-medium mb-1 text-rose-400">
-                    Click to select a photo
+                    Klik for at vælge et billede
                   </p>
                   <p className="text-xs text-gray-500">
-                    JPG, PNG, GIF up to 10MB
+                    JPG, PNG, GIF op til 10MB
                   </p>
                 </Card>
               )}
@@ -170,12 +171,12 @@ export function WeddingPhotoUpload() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Uploading...
+                  Uploader...
                 </span>
               ) : (
                 <span className="flex items-center">
                   <Upload className="mr-2 h-4 w-4" />
-                  Upload Photo
+                  Upload billede
                 </span>
               )}
             </Button>
