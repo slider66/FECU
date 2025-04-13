@@ -6,54 +6,80 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { Check, ImageIcon, Upload, X } from "lucide-react"
 
-import { uploadPhoto } from "@/lib/actions"
+import { uploadPhoto, uploadPhotos } from "@/lib/actions"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 export function WeddingPhotoUpload() {
-  const [file, setFile] = useState<File | null>(null)
-  const [preview, setPreview] = useState<string | null>(null)
+  const [files, setFiles] = useState<File[]>([])
+  const [previews, setPreviews] = useState<string[]>([])
   const [uploading, setUploading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [name, setName] = useState<string>("")
   const router = useRouter()
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0]
+    const selectedFiles = Array.from(e.target.files || [])
     setError(null)
     setSuccess(false)
 
-    if (!selectedFile) return
+    if (selectedFiles.length === 0) return
 
-    if (!selectedFile.type.startsWith("image/")) {
-      setError("Vælg venligst en billedfil")
-      return
+    // Validér hver fil
+    const validFiles: File[] = []
+    const validPreviews: string[] = []
+
+    for (const file of selectedFiles) {
+      if (!file.type.startsWith("image/")) {
+        setError("Vælg venligst kun billedfiler")
+        return
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        setError("Hvert billede skal være mindre end 10MB")
+        return
+      }
+
+      validFiles.push(file)
+      validPreviews.push(URL.createObjectURL(file))
     }
 
-    if (selectedFile.size > 10 * 1024 * 1024) {
-      setError("Billedet skal være mindre end 10MB")
-      return
-    }
+    setFiles((prev) => [...prev, ...validFiles])
+    setPreviews((prev) => [...prev, ...validPreviews])
+  }
 
-    setFile(selectedFile)
-    const objectUrl = URL.createObjectURL(selectedFile)
-    setPreview(objectUrl)
+  const removeFile = (index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index))
+    setPreviews((prev) => prev.filter((_, i) => i !== index))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!file) return
+
+    if (files.length === 0) {
+      setError("Vælg mindst ét billede")
+      return
+    }
+
+    if (!name.trim()) {
+      setError("Angiv venligst dit navn")
+      return
+    }
 
     try {
       setUploading(true)
-      await uploadPhoto(file)
+      await uploadPhotos(files, name)
       setSuccess(true)
-      setFile(null)
-      setPreview(null)
+      setFiles([])
+      setPreviews([])
+      setName("")
       // Refresh the gallery data
       router.refresh()
     } catch (err) {
-      setError("Upload af billedet mislykkedes. Prøv venligst igen.")
+      setError("Upload af billeder mislykkedes. Prøv venligst igen.")
       console.error(err)
     } finally {
       setUploading(false)
@@ -69,7 +95,7 @@ export function WeddingPhotoUpload() {
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-1">Mange tak!</h3>
           <p className="text-gray-500 mb-4">
-            Dit billede er blevet uploadet, og en notifikation er sendt til
+            Dine billeder er blevet uploadet, og en notifikation er sendt til
             brudeparret!
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -78,7 +104,7 @@ export function WeddingPhotoUpload() {
               onClick={() => setSuccess(false)}
               className="mt-2"
             >
-              Upload et andet billede
+              Upload flere billeder
             </Button>
             <Button
               variant="secondary"
@@ -92,46 +118,60 @@ export function WeddingPhotoUpload() {
       ) : (
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
+            <div className="flex flex-col">
+              <Label htmlFor="name" className="mb-2">
+                Dit navn
+              </Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Indtast dit navn"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="mb-4"
+                required
+              />
+            </div>
+
             <div className="flex flex-col items-center justify-center">
-              {preview ? (
-                <div className="relative w-full aspect-square mb-4">
-                  <Image
-                    src={preview || "/placeholder.svg"}
-                    alt="Preview"
-                    fill
-                    className="rounded-lg object-cover"
-                  />
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="icon"
-                    className="absolute top-2 right-2 h-8 w-8 rounded-full bg-rose-500 hover:bg-rose-600 shadow-md"
-                    onClick={() => {
-                      setFile(null)
-                      setPreview(null)
-                    }}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+              {previews.length > 0 ? (
+                <div className="grid grid-cols-2 gap-2 w-full mb-4">
+                  {previews.map((preview, index) => (
+                    <div key={index} className="relative aspect-square">
+                      <Image
+                        src={preview}
+                        alt={`Preview ${index + 1}`}
+                        fill
+                        className="rounded-lg object-cover"
+                      />
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="icon"
+                        className="absolute top-2 right-2 h-8 w-8 rounded-full bg-rose-500 hover:bg-rose-600 shadow-md"
+                        onClick={() => removeFile(index)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
                 </div>
-              ) : (
-                <Card
-                  className="border-dashed border-2 rounded-lg p-6 w-full flex flex-col items-center justify-center cursor-pointer hover:bg-rose-50 transition-colors mb-4 bg-rose-100"
-                  onClick={() =>
-                    document.getElementById("photo-upload")?.click()
-                  }
-                >
-                  <div className="rounded-full bg-rose-100 p-3 mb-2">
-                    <ImageIcon className="h-6 w-6 text-rose-500" />
-                  </div>
-                  <p className="text-sm font-medium mb-1 text-rose-500">
-                    Klik for at vælge et billede
-                  </p>
-                  <p className="text-xs text-gray-600">
-                    JPG, PNG, GIF op til 10MB
-                  </p>
-                </Card>
-              )}
+              ) : null}
+
+              <Card
+                className="border-dashed border-2 rounded-lg p-6 w-full flex flex-col items-center justify-center cursor-pointer hover:bg-rose-50 transition-colors mb-4 bg-rose-100"
+                onClick={() => document.getElementById("photo-upload")?.click()}
+              >
+                <div className="rounded-full bg-rose-100 p-3 mb-2">
+                  <ImageIcon className="h-6 w-6 text-rose-500" />
+                </div>
+                <p className="text-sm font-medium mb-1 text-rose-500">
+                  Klik for at vælge billeder
+                </p>
+                <p className="text-xs text-gray-600">
+                  JPG, PNG, GIF op til 10MB
+                </p>
+              </Card>
 
               <input
                 id="photo-upload"
@@ -139,6 +179,7 @@ export function WeddingPhotoUpload() {
                 accept="image/*"
                 onChange={handleFileChange}
                 className="hidden"
+                multiple
               />
 
               {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
@@ -147,7 +188,7 @@ export function WeddingPhotoUpload() {
             <Button
               type="submit"
               className="w-full bg-rose-500 hover:bg-rose-600 transition-all"
-              disabled={!file || uploading}
+              disabled={files.length === 0 || uploading || !name.trim()}
             >
               {uploading ? (
                 <span className="flex items-center">
@@ -176,7 +217,8 @@ export function WeddingPhotoUpload() {
               ) : (
                 <span className="flex items-center">
                   <Upload className="mr-2 h-4 w-4" />
-                  Upload billede
+                  Upload{" "}
+                  {files.length === 1 ? "billede" : `${files.length} billeder`}
                 </span>
               )}
             </Button>

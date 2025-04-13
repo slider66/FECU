@@ -6,19 +6,20 @@ import path from "path"
 import { revalidatePath } from "next/cache"
 import { nanoid } from "nanoid"
 
-import { sendPhotoNotification } from "./email"
+import { sendMultiplePhotosNotification, sendPhotoNotification } from "./email"
 
 type Photo = {
   id: string
   filename: string
   path: string
   createdAt: string
+  uploadedBy?: string
 }
 
 // Simpel lokal in-memory database til at gemme billeder
 let photos: Photo[] = []
 
-export async function uploadPhoto(file: File) {
+export async function uploadPhoto(file: File, name?: string) {
   try {
     const id = nanoid()
     const filename = `${id}-${file.name.replace(/\s+/g, "-").toLowerCase()}`
@@ -51,19 +52,22 @@ export async function uploadPhoto(file: File) {
       filename,
       path: publicPath,
       createdAt: new Date().toISOString(),
+      uploadedBy: name,
     }
 
     // Gem i vores simple in-memory database
     photos.unshift(photo)
 
-    // Send email notification
-    console.log("Sender e-mail notifikation...")
-    try {
-      await sendPhotoNotification(publicPath)
-      console.log("E-mail notifikation sendt")
-    } catch (emailError) {
-      console.error("Kunne ikke sende e-mail notifikation:", emailError)
-      // Vi fortsætter selvom e-mail fejler - vi logger blot fejlen
+    // Send email notification (kun for enkelt billede upload)
+    if (name === undefined) {
+      console.log("Sender e-mail notifikation...")
+      try {
+        await sendPhotoNotification(publicPath, name)
+        console.log("E-mail notifikation sendt")
+      } catch (emailError) {
+        console.error("Kunne ikke sende e-mail notifikation:", emailError)
+        // Vi fortsætter selvom e-mail fejler - vi logger blot fejlen
+      }
     }
 
     revalidatePath("/gallery")
@@ -74,6 +78,43 @@ export async function uploadPhoto(file: File) {
       throw new Error(`Kunne ikke uploade billede: ${error.message}`)
     } else {
       throw new Error("Kunne ikke uploade billede: Ukendt fejl")
+    }
+  }
+}
+
+export async function uploadPhotos(files: File[], name: string) {
+  try {
+    if (!files.length) {
+      throw new Error("Ingen filer at uploade")
+    }
+
+    const uploadedPaths: string[] = []
+
+    // Upload hvert billede enkeltvis (uden at sende mails)
+    for (const file of files) {
+      const path = await uploadPhoto(file, name)
+      uploadedPaths.push(path)
+    }
+
+    // Send én samlet e-mail med alle billeder
+    console.log(
+      `Sender e-mail notifikation med ${uploadedPaths.length} billeder...`
+    )
+    try {
+      await sendMultiplePhotosNotification(uploadedPaths, name)
+      console.log("E-mail notifikation med alle billeder sendt")
+    } catch (emailError) {
+      console.error("Kunne ikke sende e-mail notifikation:", emailError)
+      // Vi fortsætter selvom e-mail fejler - vi logger blot fejlen
+    }
+
+    return uploadedPaths
+  } catch (error) {
+    console.error("Fejl ved upload af billeder:", error)
+    if (error instanceof Error) {
+      throw new Error(`Kunne ikke uploade billeder: ${error.message}`)
+    } else {
+      throw new Error("Kunne ikke uploade billeder: Ukendt fejl")
     }
   }
 }
