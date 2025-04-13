@@ -74,7 +74,7 @@ export function WeddingPhotoUpload() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button
-              variant="outline"
+              variant="destructive"
               onClick={() => setSuccess(false)}
               className="mt-2"
             >
@@ -105,7 +105,7 @@ export function WeddingPhotoUpload() {
                     type="button"
                     variant="secondary"
                     size="icon"
-                    className="absolute top-2 right-2 h-8 w-8 rounded-full bg-white/80 hover:bg-white shadow-md"
+                    className="absolute top-2 right-2 h-8 w-8 rounded-full bg-rose-500 hover:bg-rose-600 shadow-md"
                     onClick={() => {
                       setFile(null)
                       setPreview(null)
@@ -116,7 +116,7 @@ export function WeddingPhotoUpload() {
                 </div>
               ) : (
                 <Card
-                  className="border-dashed border-2 rounded-lg p-6 w-full flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors mb-4"
+                  className="border-dashed border-2 rounded-lg p-6 w-full flex flex-col items-center justify-center cursor-pointer hover:bg-rose-50 transition-colors mb-4"
                   onClick={() =>
                     document.getElementById("photo-upload")?.click()
                   }
