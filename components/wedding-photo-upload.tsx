@@ -116,7 +116,7 @@ export function WeddingPhotoUpload() {
                 </div>
               ) : (
                 <Card
-                  className="border-dashed border-2 rounded-lg p-6 w-full flex flex-col items-center justify-center cursor-pointer hover:bg-rose-50 transition-colors mb-4"
+                  className="border-dashed border-2 rounded-lg p-6 w-full flex flex-col items-center justify-center cursor-pointer hover:bg-rose-50 transition-colors mb-4 bg-rose-100"
                   onClick={() =>
                     document.getElementById("photo-upload")?.click()
                   }
@@ -124,10 +124,10 @@ export function WeddingPhotoUpload() {
                   <div className="rounded-full bg-rose-100 p-3 mb-2">
                     <ImageIcon className="h-6 w-6 text-rose-500" />
                   </div>
-                  <p className="text-sm font-medium mb-1 text-rose-400">
+                  <p className="text-sm font-medium mb-1 text-rose-500">
                     Klik for at vælge et billede
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-600">
                     JPG, PNG, GIF op til 10MB
                   </p>
                 </Card>
