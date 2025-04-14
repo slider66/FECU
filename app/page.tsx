@@ -7,24 +7,24 @@ import { Button } from "@/components/ui/button"
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-rose-50 to-rose-100">
-      <div className="container px-4 py-12 mx-auto max-w-md">
+      <div className="container mx-auto max-w-md px-4 py-12">
         {/* Header */}
-        <header className="text-center mb-8 animate-fade-in">
-          <div className="flex items-center justify-center mb-4">
-            <HeartIcon className="h-6 w-6 text-rose-400 mr-2" />
-            <h1 className="text-3xl font-serif font-medium text-gray-800">
+        <header className="animate-fade-in mb-8 text-center">
+          <div className="mb-4 flex items-center justify-center">
+            <HeartIcon className="mr-2 size-6 text-rose-400" />
+            <h1 className="font-serif text-3xl font-medium text-gray-800">
               Renas & Ayse
             </h1>
-            <HeartIcon className="h-6 w-6 text-rose-400 ml-2" />
+            <HeartIcon className="ml-2 size-6 text-rose-400" />
           </div>
-          <p className="text-lg text-gray-600 mb-2 font-serif">
+          <p className="mb-2 font-serif text-lg text-gray-600">
             Vores bryllupsfest
           </p>
           <p className="text-sm text-gray-500">15. april 2025</p>
         </header>
 
         {/* Hero Image */}
-        <div className="relative w-full h-64 mb-8 rounded-2xl overflow-hidden shadow-lg animate-fade-in">
+        <div className="animate-fade-in relative mb-8 h-64 w-full overflow-hidden rounded-2xl shadow-lg">
           <Image
             src="/tender-embrace.png"
             alt="Renas and Ayse"
@@ -32,7 +32,7 @@ export default function Home() {
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end">
+          <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/40 to-transparent">
             <div className="p-4 text-white">
               <p className="font-serif text-xl">
                 Tak for at du deltager til vores bryllup!
@@ -42,18 +42,18 @@ export default function Home() {
         </div>
 
         {/* Call to Action */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg p-6 mb-8 text-center animate-fade-in">
-          <h2 className="text-xl font-serif mb-3 text-gray-800">
+        <div className="animate-fade-in mb-8 rounded-2xl bg-white/80 p-6 text-center shadow-lg backdrop-blur-sm">
+          <h2 className="mb-3 font-serif text-xl text-gray-800">
             Del dine minder
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="mb-6 text-gray-600">
             Hjælp os med at optage alle de specielle øjeblikke fra vores bryllup
           </p>
 
           <div className="flex flex-col gap-4">
             <Link href="/upload" className="w-full">
-              <Button className="w-full bg-rose-500 hover:bg-rose-600 transition-all">
-                <Camera className="mr-2 h-4 w-4" />
+              <Button className="w-full bg-rose-500 transition-all hover:bg-rose-600">
+                <Camera className="mr-2 size-4" />
                 Upload billeder
               </Button>
             </Link>
@@ -61,7 +61,7 @@ export default function Home() {
             <Link href="/gallery" className="w-full">
               <Button
                 variant="outline"
-                className="w-full border-rose-200 text-rose-600 hover:bg-rose-50 transition-all"
+                className="w-full border-rose-200 text-rose-600 transition-all hover:bg-rose-50"
               >
                 Se galleri
               </Button>
@@ -70,7 +70,7 @@ export default function Home() {
         </div>
 
         {/* Footer */}
-        <footer className="text-center text-sm text-gray-500 animate-fade-in">
+        <footer className="animate-fade-in text-center text-sm text-gray-500">
           <p>
             Lavet af Gøkmen Øzbayir med &#x2665;&#xfe0f; til denne specielle dag
           </p>

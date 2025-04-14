@@ -20,7 +20,7 @@ export function SiteHeader() {
                   variant: "ghost",
                 })}
               >
-                <Icons.image className="h-5 w-5" />
+                <Icons.image className="size-5" />
                 <span className="sr-only">Galleri</span>
               </div>
             </Link>
@@ -31,7 +31,7 @@ export function SiteHeader() {
                   variant: "ghost",
                 })}
               >
-                <Icons.upload className="h-5 w-5" />
+                <Icons.upload className="size-5" />
                 <span className="sr-only">Upload</span>
               </div>
             </Link>

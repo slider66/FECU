@@ -21,8 +21,8 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
 
   if (photos.length === 0) {
     return (
-      <div className="text-center py-12 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg">
-        <p className="text-gray-500 mb-2">
+      <div className="rounded-2xl bg-white/80 py-12 text-center shadow-lg backdrop-blur-sm">
+        <p className="mb-2 text-gray-500">
           Der er ikke uploadet nogen billeder endnu.
         </p>
         <p className="text-sm text-gray-400">
@@ -34,11 +34,11 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
 
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4">
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-4">
         {photos.map((photo) => (
           <div
             key={photo.id}
-            className="aspect-square relative rounded-lg overflow-hidden shadow-md cursor-pointer transform transition-transform hover:scale-[1.02]"
+            className="relative aspect-square cursor-pointer overflow-hidden rounded-lg shadow-md transition-transform hover:scale-[1.02]"
             onClick={() => setSelectedPhoto(photo)}
           >
             <Image
@@ -55,9 +55,9 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
         open={!!selectedPhoto}
         onOpenChange={(open) => !open && setSelectedPhoto(null)}
       >
-        <DialogContent className="max-w-3xl w-[90vw] p-1 bg-transparent border-none">
+        <DialogContent className="w-[90vw] max-w-3xl border-none bg-transparent p-1">
           {selectedPhoto && (
-            <div className="relative w-full aspect-[4/3] md:aspect-[16/9]">
+            <div className="relative aspect-[4/3] w-full md:aspect-[16/9]">
               <Image
                 src={selectedPhoto.path || "/placeholder.svg"}
                 alt="Bryllupsbillede"
