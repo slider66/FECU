@@ -17,8 +17,8 @@ const cormorant = Cormorant_Garamond({
 })
 
 export const metadata = {
-  title: "Renas & Ayse's Wedding",
-  description: "Share your photos from our special day",
+  title: "Renas & Ayse's Bryllup",
+  description: "Del dine billeder fra vores specielle dag",
 }
 
 export default function RootLayout({

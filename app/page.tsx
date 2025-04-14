@@ -71,7 +71,9 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="text-center text-sm text-gray-500 animate-fade-in">
-          <p>Lavet med &#x2665;&#xfe0f; til vores specielle dag</p>
+          <p>
+            Lavet af Gøkmen Øzbayir med &#x2665;&#xfe0f; til denne specielle dag
+          </p>
         </footer>
       </div>
     </main>
