@@ -116,7 +116,7 @@ export async function sendPhotoNotification(
     await sendEmail({
       to,
       subject: emailSubject,
-      text: `Et nyt billede${uploaderInfo} er blevet uploadet til bryllupsgalleriet.\n\nSe billedet her: ${absoluteImageUrl}`,
+      text: `Et nyt billede${uploaderInfo} er blevet uploadet til bryllupsgalleriet.`,
       html: `
         <h1>Nyt bryllupsbillede uploadet</h1>
         ${
