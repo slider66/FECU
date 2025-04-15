@@ -187,7 +187,7 @@ export async function clearAllPhotos() {
     const photos = await prisma.photo.findMany()
 
     // Slet filer i Supabase storage
-    for (const photo of photos) {
+    for (const photo of photos as Photo[]) {
       const bucketPath = photo.bucketPath
       const pathParts = bucketPath.split("/")
       if (pathParts.length >= 2) {
