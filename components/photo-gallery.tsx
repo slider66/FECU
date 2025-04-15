@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import Image from "next/image"
+import { formatDistanceToNow } from "date-fns"
+import { da } from "date-fns/locale"
 
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 
@@ -10,6 +12,7 @@ type Photo = {
   path: string
   filename: string
   createdAt: string
+  uploadedBy?: string | null
 }
 
 interface PhotoGalleryProps {
@@ -30,6 +33,16 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
         </p>
       </div>
     )
+  }
+
+  // Funktion til at formatere dato
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString)
+      return formatDistanceToNow(date, { addSuffix: true, locale: da })
+    } catch (e) {
+      return "Ukendt dato"
+    }
   }
 
   return (
@@ -57,14 +70,26 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
       >
         <DialogContent className="w-[90vw] max-w-3xl border-none bg-transparent p-1">
           {selectedPhoto && (
-            <div className="relative aspect-[4/3] w-full md:aspect-[16/9]">
-              <Image
-                src={selectedPhoto.path || "/placeholder.svg"}
-                alt="Bryllupsbillede"
-                fill
-                className="object-contain"
-                priority
-              />
+            <div className="flex flex-col bg-white/90 backdrop-blur-sm rounded-lg overflow-hidden">
+              <div className="relative aspect-[4/3] w-full md:aspect-[16/9]">
+                <Image
+                  src={selectedPhoto.path || "/placeholder.svg"}
+                  alt="Bryllupsbillede"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+              <div className="p-3 bg-white">
+                {selectedPhoto.uploadedBy && (
+                  <p className="text-sm font-medium text-gray-700">
+                    Uploadet af {selectedPhoto.uploadedBy}
+                  </p>
+                )}
+                <p className="text-xs text-gray-500">
+                  {formatDate(selectedPhoto.createdAt)}
+                </p>
+              </div>
             </div>
           )}
         </DialogContent>

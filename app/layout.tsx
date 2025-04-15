@@ -2,6 +2,7 @@ import type React from "react"
 
 import "@/styles/globals.css"
 import { fontSans, fontSerif } from "@/lib/fonts"
+import { InitSupabase } from "@/components/init-supabase"
 import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata = {
@@ -31,6 +32,8 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          {/* Supabase initialisering */}
+          <InitSupabase />
           {children}
         </ThemeProvider>
       </body>

@@ -33,7 +33,8 @@ interface EmailOptions {
   html?: string
   attachments?: Array<{
     filename: string
-    path: string
+    path?: string
+    href?: string
   }>
 }
 
@@ -78,7 +79,7 @@ export async function sendEmail(options: EmailOptions): Promise<void> {
 }
 
 export async function sendPhotoNotification(
-  photoPath: string,
+  photoUrl: string,
   uploadedBy?: string
 ): Promise<void> {
   // Hvis transporter ikke er konfigureret, hop over e-mail
@@ -97,18 +98,6 @@ export async function sendPhotoNotification(
 
   console.log(`Sender e-mail notifikation til: ${to}`)
 
-  // Konverter relativ sti til absolut URL
-  const hostname = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-  const absoluteImageUrl = `${hostname}${photoPath}`
-
-  // Tjek om filen eksisterer
-  const localImagePath = path.join(process.cwd(), "public", photoPath)
-  if (!existsSync(localImagePath)) {
-    console.warn(
-      `Advarsel: Billedfilen findes ikke på stien: ${localImagePath}`
-    )
-  }
-
   const uploaderInfo = uploadedBy ? ` fra ${uploadedBy}` : ""
   const emailSubject = `Nyt bryllupsbillede${uploaderInfo} uploadet`
 
@@ -125,15 +114,15 @@ export async function sendPhotoNotification(
             : `<p>Et nyt billede er blevet uploadet til bryllupsgalleriet.</p>`
         }
         <div style="margin: 20px 0;">
-          <img src="${absoluteImageUrl}" alt="Bryllupsbillede" style="max-width: 600px; max-height: 400px;" />
+          <img src="${photoUrl}" alt="Bryllupsbillede" style="max-width: 600px; max-height: 400px;" />
         </div>
-        <p><a href="${absoluteImageUrl}" target="_blank">Åbn billede i fuld størrelse</a></p>
+        <p><a href="${photoUrl}" target="_blank">Åbn billede i fuld størrelse</a></p>
       `,
-      // Vedhæft billedet (fra lokal filsti)
+      // Henviser til billedet via URL i stedet for at vedhæfte det
       attachments: [
         {
-          filename: photoPath.split("/").pop() || "bryllupsbillede.jpg",
-          path: localImagePath,
+          filename: photoUrl.split("/").pop() || "bryllupsbillede.jpg",
+          href: photoUrl,
         },
       ],
     })
@@ -145,7 +134,7 @@ export async function sendPhotoNotification(
 }
 
 export async function sendMultiplePhotosNotification(
-  photoPaths: string[],
+  photoUrls: string[],
   uploadedBy?: string
 ): Promise<void> {
   // Hvis transporter ikke er konfigureret, hop over e-mail
@@ -156,7 +145,7 @@ export async function sendMultiplePhotosNotification(
     return
   }
 
-  if (!photoPaths.length) {
+  if (!photoUrls.length) {
     console.warn("Ingen billeder at sende.")
     return
   }
@@ -168,53 +157,41 @@ export async function sendMultiplePhotosNotification(
   }
 
   console.log(
-    `Sender e-mail notifikation med ${photoPaths.length} billeder til: ${to}`
+    `Sender e-mail notifikation med ${photoUrls.length} billeder til: ${to}`
   )
-
-  // Konverter relativ sti til absolut URL
-  const hostname = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
 
   // Forbered vedhæftede filer og HTML for hvert billede
   const attachments = []
   let imagesHtml = ""
 
-  for (let i = 0; i < photoPaths.length; i++) {
-    const photoPath = photoPaths[i]
-    const absoluteImageUrl = `${hostname}${photoPath}`
-
-    // Tjek om filen eksisterer
-    const localImagePath = path.join(process.cwd(), "public", photoPath)
-    if (!existsSync(localImagePath)) {
-      console.warn(
-        `Advarsel: Billedfilen findes ikke på stien: ${localImagePath}`
-      )
-      continue
-    }
+  for (let i = 0; i < photoUrls.length; i++) {
+    const photoUrl = photoUrls[i]
 
     // Tilføj til vedhæftninger
     attachments.push({
-      filename: photoPath.split("/").pop() || `bryllupsbillede-${i + 1}.jpg`,
-      path: localImagePath,
+      filename: photoUrl.split("/").pop() || `bryllupsbillede-${i + 1}.jpg`,
+      href: photoUrl,
     })
 
     // Tilføj til HTML
     imagesHtml += `
       <div style="margin: 20px 0;">
         <p style="margin-bottom: 5px;"><strong>Billede ${i + 1}</strong></p>
-        <img src="${absoluteImageUrl}" alt="Bryllupsbillede ${
+        <img src="${photoUrl}" alt="Bryllupsbillede ${
       i + 1
     }" style="max-width: 600px; max-height: 400px;" />
-        <p><a href="${absoluteImageUrl}" target="_blank">Åbn billede i fuld størrelse</a></p>
+        <p><a href="${photoUrl}" target="_blank">Åbn billede i fuld størrelse</a></p>
       </div>
     `
   }
 
   const uploaderInfo = uploadedBy ? ` fra ${uploadedBy}` : ""
   const billederText =
-    photoPaths.length === 1
+    photoUrls.length === 1
       ? "Nyt bryllupsbillede"
-      : `${photoPaths.length} nye bryllupsbilleder`
+      : `${photoUrls.length} nye bryllupsbilleder`
   const emailSubject = `${billederText}${uploaderInfo} uploadet`
+  const hostname = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
 
   try {
     await sendEmail({
@@ -226,16 +203,16 @@ export async function sendMultiplePhotosNotification(
         ${
           uploadedBy
             ? `<p><strong>${uploadedBy}</strong> har uploadet ${
-                photoPaths.length
+                photoUrls.length
               } ${
-                photoPaths.length === 1 ? "billede" : "billeder"
+                photoUrls.length === 1 ? "billede" : "billeder"
               } til bryllupsgalleriet.</p>`
             : `<p>${billederText} er blevet uploadet til bryllupsgalleriet.</p>`
         }
         ${imagesHtml}
         <p style="margin-top: 20px;"><a href="${hostname}/gallery" style="display: inline-block; background-color: #f43f5e; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; font-weight: bold;">Besøg galleriet</a></p>
       `,
-      // Vedhæft billederne
+      // Vedhæft billederne med URL referencer
       attachments,
     })
   } catch (error) {

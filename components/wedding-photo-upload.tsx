@@ -6,7 +6,7 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { Check, ImageIcon, Upload, X } from "lucide-react"
 
-import { uploadPhoto, uploadPhotos } from "@/lib/actions"
+import { uploadPhotoForm } from "@/lib/actions"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -71,16 +71,36 @@ export function WeddingPhotoUpload() {
 
     try {
       setUploading(true)
-      await uploadPhotos(files, name)
-      setSuccess(true)
-      setFiles([])
-      setPreviews([])
-      setName("")
-      // Refresh the gallery data
-      router.refresh()
+      setError(null)
+
+      // Brug FormData til at sende filerne
+      const formData = new FormData()
+      formData.append("name", name.trim())
+
+      // Tilføj alle filer til formData
+      files.forEach((file) => {
+        formData.append("files", file)
+      })
+
+      // Upload med formData tilgangen
+      const result = await uploadPhotoForm(formData)
+
+      if (result.success) {
+        setSuccess(true)
+        setFiles([])
+        setPreviews([])
+        setName("")
+
+        // Opdater galleri-dataene
+        router.refresh()
+      } else {
+        setError(
+          result.error || "Upload af billeder mislykkedes. Prøv venligst igen."
+        )
+      }
     } catch (err) {
+      console.error("Upload fejl:", err)
       setError("Upload af billeder mislykkedes. Prøv venligst igen.")
-      console.error(err)
     } finally {
       setUploading(false)
     }
