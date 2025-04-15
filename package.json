@@ -27,6 +27,7 @@
     "date-fns": "^4.1.0",
     "eslint-config-next": "14.1.0",
     "lucide-react": "0.105.0-alpha.4",
+    "nanoid": "^5.1.5",
     "next": "^14.1.0",
     "next-template": "file:",
     "next-themes": "^0.2.1",

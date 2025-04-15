@@ -7,6 +7,16 @@ import { sendMultiplePhotosNotification, sendPhotoNotification } from "./email"
 import { prisma } from "./prisma"
 import { supabase } from "./supabase"
 
+// Type definition baseret på Prisma Photo model
+type Photo = {
+  id: string
+  filename: string
+  path: string
+  createdAt: Date
+  uploadedBy: string | null
+  bucketPath: string
+}
+
 export async function uploadPhoto(file: File, name?: string) {
   try {
     const id = nanoid()
@@ -161,7 +171,7 @@ export async function getPhotos() {
     })
 
     // Konverter Date objekter til strenge for at matche forventet type i UI
-    return photos.map((photo) => ({
+    return photos.map((photo: Photo) => ({
       ...photo,
       createdAt: photo.createdAt.toISOString(),
     }))
