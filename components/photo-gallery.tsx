@@ -70,7 +70,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
       >
         <DialogContent className="w-[90vw] max-w-3xl border-none bg-transparent p-1">
           {selectedPhoto && (
-            <div className="flex flex-col bg-white/90 backdrop-blur-sm rounded-lg overflow-hidden">
+            <div className="flex flex-col bg-white/25 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10">
               <div className="relative aspect-[4/3] w-full md:aspect-[16/9]">
                 <Image
                   src={selectedPhoto.path || "/placeholder.svg"}
