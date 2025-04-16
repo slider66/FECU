@@ -24,15 +24,15 @@ export default function Home() {
         </header>
 
         {/* Hero Image */}
-        <div className="animate-fade-in relative mb-8 h-64 w-full overflow-hidden rounded-2xl shadow-lg">
+        <div className="animate-fade-in relative mb-8 h-64 w-full overflow-hidden rounded-2xl shadow-lg ">
           <Image
-            src="/tender-embrace.png"
+            src="/Renas_Ayse2.jpeg"
             alt="Renas and Ayse"
             fill
-            className="object-cover"
+            className="object-cover brightness-90"
             priority
           />
-          <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/40 to-transparent">
+          <div className="absolute inset-0 flex items-end bg-gradient-to-t from-rose-900/40 via-rose-800/20 to-rose-500/15">
             <div className="p-4 text-white">
               <p className="font-serif text-xl">
                 Tak for at du deltager til vores bryllup!
