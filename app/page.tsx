@@ -61,7 +61,7 @@ export default function Home() {
             <Link href="/gallery" className="w-full">
               <Button
                 variant="outline"
-                className="w-full border-rose-200 text-rose-600 transition-all hover:bg-rose-50"
+                className="w-full border-rose-200 text-rose-600 transition-all hover:bg-rose-50 hidden"
               >
                 Se galleri
               </Button>
@@ -71,9 +71,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="animate-fade-in text-center text-sm text-gray-500">
-          <p>
-            Lavet af Gøkmen Øzbayir med &#x2665;&#xfe0f; til denne specielle dag
-          </p>
+          <p>Lavet med &#x2665;&#xfe0f; af Gøkmen Øzbayir</p>
         </footer>
       </div>
     </main>

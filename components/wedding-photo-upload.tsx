@@ -129,7 +129,7 @@ export function WeddingPhotoUpload() {
             <Button
               variant="secondary"
               onClick={() => router.push("/gallery")}
-              className="mt-2 bg-rose-100 hover:bg-rose-200 text-rose-700"
+              className="mt-2 bg-rose-100 hover:bg-rose-200 text-rose-700 hidden"
             >
               Se galleri
             </Button>

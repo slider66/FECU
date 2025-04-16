@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { HeartIcon } from "lucide-react"
+import { ArrowLeft, HeartIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { WeddingPhotoUpload } from "@/components/wedding-photo-upload"
@@ -34,9 +34,10 @@ export default function UploadPage() {
 
         {/* Navigation */}
         <div className="flex justify-center mb-8">
-          <Link href="/gallery">
+          <Link href="/">
             <Button variant="link" className="text-rose-600">
-              Se galleri
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Tilbage
             </Button>
           </Link>
         </div>
