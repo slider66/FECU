@@ -1,8 +1,19 @@
+import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { Camera, HeartIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+
+export const metadata: Metadata = {
+  title: "Renas & Ayse's Bryllup",
+  description: "Del dine billeder fra vores specielle dag",
+  openGraph: {
+    title: "Renas & Ayse's Bryllup",
+    description: "Del dine billeder fra vores specielle dag",
+    type: "website",
+  },
+}
 
 export default function Home() {
   return (

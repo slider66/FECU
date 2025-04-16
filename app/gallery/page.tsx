@@ -1,9 +1,20 @@
+import { Metadata } from "next"
 import Link from "next/link"
 import { HeartIcon, Upload } from "lucide-react"
 
 import { getPhotos } from "@/lib/actions"
 import { Button } from "@/components/ui/button"
 import { PhotoGallery } from "@/components/photo-gallery"
+
+export const metadata: Metadata = {
+  title: "Bryllupsgalleri | Renas & Ayse's Bryllup",
+  description: "Se alle de dejlige billeder fra vores bryllup",
+  openGraph: {
+    title: "Bryllupsgalleri | Renas & Ayse's Bryllup",
+    description: "Se alle de dejlige billeder fra vores bryllup",
+    type: "website",
+  },
+}
 
 export default async function GalleryPage() {
   const photos = await getPhotos()
