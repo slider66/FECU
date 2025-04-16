@@ -20,6 +20,7 @@ export function WeddingPhotoUpload() {
   const [error, setError] = useState<string | null>(null)
   const [name, setName] = useState<string>("")
   const router = useRouter()
+  const MAX_IMAGES = 15
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || [])
@@ -27,6 +28,12 @@ export function WeddingPhotoUpload() {
     setSuccess(false)
 
     if (selectedFiles.length === 0) return
+
+    // Tjek om maksimalt antal billeder overskrides
+    if (files.length + selectedFiles.length > MAX_IMAGES) {
+      setError(`Du kan maksimalt uploade ${MAX_IMAGES} billeder ad gangen`)
+      return
+    }
 
     // Validér hver fil
     const validFiles: File[] = []
@@ -179,17 +186,31 @@ export function WeddingPhotoUpload() {
               ) : null}
 
               <Card
-                className="border-dashed border-2 rounded-lg p-6 w-full flex flex-col items-center justify-center cursor-pointer hover:bg-rose-50 transition-colors mb-4 bg-rose-100"
-                onClick={() => document.getElementById("photo-upload")?.click()}
+                className={`border-dashed border-2 rounded-lg p-6 w-full flex flex-col items-center justify-center cursor-pointer hover:bg-rose-50 transition-colors mb-4 bg-rose-100 ${
+                  files.length >= MAX_IMAGES
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                onClick={() => {
+                  if (files.length < MAX_IMAGES) {
+                    document.getElementById("photo-upload")?.click()
+                  } else {
+                    setError(
+                      `Du kan maksimalt uploade ${MAX_IMAGES} billeder ad gangen`
+                    )
+                  }
+                }}
               >
                 <div className="rounded-full bg-rose-100 p-3 mb-2">
                   <ImageIcon className="h-6 w-6 text-rose-500" />
                 </div>
                 <p className="text-sm font-medium mb-1 text-rose-500">
-                  Klik for at vælge billeder
+                  {files.length >= MAX_IMAGES
+                    ? "Maksimalt antal billeder nået"
+                    : "Klik for at vælge billeder"}
                 </p>
                 <p className="text-xs text-gray-600">
-                  JPG, PNG, GIF op til 10MB
+                  Husk at vælge de bedste øjeblikke
                 </p>
               </Card>
 
