@@ -20,7 +20,7 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-b from-rose-50 to-rose-100">
       <div className="container mx-auto max-w-md px-4 py-12">
         {/* Header */}
-        <header className="animate-fade-in mb-8 text-center">
+        <header className="animate-fade-in mb-6 text-center">
           <div className="mb-4 flex items-center justify-center">
             <HeartIcon className="mr-2 size-6 text-rose-400" />
             <h1 className="font-serif text-3xl font-medium text-gray-800">
@@ -31,7 +31,7 @@ export default function Home() {
           <p className="mb-2 font-serif text-lg text-gray-600">
             Vores bryllupsfest
           </p>
-          <p className="text-sm text-gray-500">15. april 2025</p>
+          <p className="text-sm text-gray-500">26. april 2025</p>
         </header>
 
         {/* Hero Image */}

@@ -39,13 +39,6 @@ export default async function GalleryPage() {
           <p className="text-sm text-gray-500 mb-4">
             Minder fra vores særlige dag
           </p>
-
-          <Link href="/upload" className="inline-block">
-            <Button size="sm" className="bg-rose-500 hover:bg-rose-600">
-              <Upload className="mr-2 h-4 w-4" />
-              Tilføj billeder
-            </Button>
-          </Link>
         </header>
 
         {/* Gallery */}
