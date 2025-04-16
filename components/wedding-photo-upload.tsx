@@ -210,7 +210,7 @@ export function WeddingPhotoUpload() {
                     : "Klik for at vælge billeder"}
                 </p>
                 <p className="text-xs text-gray-600">
-                  Husk at vælge de bedste øjeblikke
+                  Vælg de bedste øjeblikke
                 </p>
               </Card>
 
