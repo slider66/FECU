@@ -14,6 +14,25 @@ QR Wedding Snap is a modern, responsive web application built with Next.js that 
 - **Real-time Updates**: Photos appear in the gallery immediately after upload
 - **Minimal UI**: Clean, intuitive interface for all age groups
 - **Email Notifications**: Automatic email notifications with attached photos when guests upload images
+- **Hidden Gallery**: The gallery page is hidden from the main navigation and can only be accessed via the direct path `/gallery`
+
+## Screenshots
+
+### Home Page
+
+![Home Page](/public/README/01_index_page.png)
+
+### Upload Page
+
+![Upload Page](/public/README/02_upload_page.png)
+
+### Upload Success
+
+![Upload Success](/public/README/03_upload_success_page.png)
+
+### Hidden Gallery Page
+
+![Hidden Gallery Page](/public/README/04_gallery_page_hidden.png)
 
 ## Technology Stack
 
