@@ -13,6 +13,16 @@ export const metadata = {
     shortcut: ["/love_heart.ico"],
     apple: [{ url: "/love_heart.ico" }],
   },
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+    },
+  },
 }
 
 export default function RootLayout({
@@ -22,6 +32,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="robots" content="noindex, nofollow, noarchive" />
+        <meta name="googlebot" content="noindex, nofollow, noimageindex" />
+      </head>
       <body
         className={`${fontSans.variable} ${fontSerif.variable} font-sans`}
         suppressHydrationWarning
