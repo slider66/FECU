@@ -6,12 +6,15 @@ import { InitSupabase } from "@/components/init-supabase"
 import { ThemeProvider } from "@/components/theme-provider"
 
 export const metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+  ),
   title: "Renas & Ayse's Bryllup",
   description: "Del dine billeder fra vores specielle dag",
   icons: {
-    icon: [{ url: "/love_heart.ico" }],
-    shortcut: ["/love_heart.ico"],
-    apple: [{ url: "/love_heart.ico" }],
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
   },
   robots: {
     index: false,
@@ -35,6 +38,8 @@ export default function RootLayout({
       <head>
         <meta name="robots" content="noindex, nofollow, noarchive" />
         <meta name="googlebot" content="noindex, nofollow, noimageindex" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
       </head>
       <body
         className={`${fontSans.variable} ${fontSerif.variable} font-sans`}
