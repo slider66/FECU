@@ -178,8 +178,13 @@ export function WeddingPhotoUpload() {
         formData.append("files", file)
       })
 
-      // Upload med formData tilgangen
-      const result = await uploadPhotoForm(formData)
+      // Upload via API endpoint i stedet for at kalde server action direkte
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      })
+
+      const result = await response.json()
 
       if (result.success) {
         setSuccess(true)

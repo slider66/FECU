@@ -8,6 +8,10 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    serverComponentsExternalPackages: [],
+    largePageDataBytes: 128 * 1000 * 1000, // 128MB
+  },
 }
 
 export default nextConfig
