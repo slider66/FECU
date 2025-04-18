@@ -1,6 +1,8 @@
 import type React from "react"
 
 import "@/styles/globals.css"
+import { Analytics } from "@vercel/analytics/react"
+
 import { fontSans, fontSerif } from "@/lib/fonts"
 import { InitSupabase } from "@/components/init-supabase"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -56,6 +58,7 @@ export default function RootLayout({
           {children}
         </ThemeProvider>
       </body>
+      <Analytics />
     </html>
   )
 }
