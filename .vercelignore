@@ -1,0 +1,10 @@
+# Ignorer middleware, da vi vil håndtere Supabase setup andetsteds
+middleware.ts
+
+# Ignorer gamle build caches
+.next/
+.vercel/
+
+# Ignorer lock files der kan skabe problemer
+package-lock.json
+yarn.lock 
