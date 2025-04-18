@@ -9,14 +9,7 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    webVitalsAttribution: ["CLS", "LCP"],
-  },
-  // Konfiguration til at håndtere fonts offline
-  // Dette hjælper med at undgå netværksproblemer under bygning
-  optimizeFonts: false,
-
-  // Brug standalone output for bedre serverless kompatibilitet
+  // Fjernet alle eksperimentelle funktioner
   output: "standalone",
 }
 
