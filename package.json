@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "NODE_OPTIONS='--max-old-space-size=4096' prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -27,7 +27,6 @@
     "lucide-react": "0.105.0-alpha.4",
     "nanoid": "^5.1.5",
     "next": "^14.1.0",
-    "next-template": "file:",
     "next-themes": "^0.2.1",
     "nodemailer": "^6.10.1",
     "react": "^18.2.0",
