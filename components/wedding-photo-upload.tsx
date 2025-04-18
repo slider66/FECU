@@ -284,10 +284,10 @@ export function WeddingPhotoUpload() {
                   </div>
                   <p className="text-xs text-gray-500 mt-1 text-center">
                     {compressionProgress < 100
-                      ? `Komprimerer billeder: ${Math.round(
+                      ? `Uploader billeder: ${Math.round(
                           compressionProgress
-                        )}%`
-                      : "Komprimering færdig"}
+                        )}% `
+                      : "Upload færdig"}
                   </p>
                 </div>
               )}
@@ -319,7 +319,7 @@ export function WeddingPhotoUpload() {
                     : "Klik for at vælge billeder"}
                 </p>
                 <p className="text-xs text-gray-600">
-                  Vælg de bedste øjeblikke (billeder komprimeres automatisk)
+                  Vælg de bedste øjeblikke
                 </p>
               </Card>
 
