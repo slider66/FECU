@@ -52,8 +52,8 @@ export function WeddingPhotoUpload() {
 
   const compressImage = async (file: File): Promise<File> => {
     const options = {
-      maxSizeMB: 1, // Maksimal størrelse i MB
-      maxWidthOrHeight: 1920, // Begræns dimensioner
+      maxSizeMB: 0.8, // Reduceret fra 1MB til 0.8MB for bedre komprimering
+      maxWidthOrHeight: 1600, // Reduceret fra 1920 for yderligere komprimering
       useWebWorker: true,
       onProgress: (progress: number) => {
         // Opdater målprocenten, men lad effekten håndtere den faktiske animation
@@ -162,6 +162,24 @@ export function WeddingPhotoUpload() {
 
     if (!name.trim()) {
       setError("Angiv venligst dit navn")
+      return
+    }
+
+    // Kontrollér filstørrelser inden upload forsøges
+    const totalSize = files.reduce((sum, file) => sum + file.size, 0)
+    const maxFileSize = Math.max(...files.map((file) => file.size))
+
+    if (maxFileSize > 5 * 1024 * 1024) {
+      setError(
+        "Et eller flere billeder er stadig for store. Den største fil er over 5MB."
+      )
+      return
+    }
+
+    if (totalSize > 50 * 1024 * 1024) {
+      setError(
+        "Den samlede størrelse af dine billeder er for stor (over 50MB). Vælg færre billeder eller billeder i lavere opløsning."
+      )
       return
     }
 
@@ -325,6 +343,9 @@ export function WeddingPhotoUpload() {
                 </p>
                 <p className="text-xs text-gray-600">
                   Vælg de bedste øjeblikke
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Højest {MAX_IMAGES} billeder, max 5MB per billede
                 </p>
               </Card>
 
