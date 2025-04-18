@@ -5,9 +5,13 @@ import { uploadPhotoForm } from "../../../lib/actions"
 // Konfigurationer for App Router API-ruter
 export const dynamic = "force-dynamic"
 
-// Tillad større uploads (50MB)
+// Tillad længere køretid og store uploads
 export const maxDuration = 60 // sekunder
-export const bodySize = "50mb"
+
+// Route segment configuration
+// https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
+export const fetchCache = "force-no-store"
+export const runtime = "nodejs"
 
 // Denne konfiguration angiver at route ikke bør parsere kroppen automatisk
 // Så vi kan acceptere store filer
