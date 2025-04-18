@@ -11,22 +11,37 @@ export async function compressImageBuffer(
     format?: "jpeg" | "png" | "webp"
   } = {}
 ): Promise<Buffer> {
-  const { quality = 80, width = 1920, height = 1080, format = "jpeg" } = options
+  try {
+    const {
+      quality = 80,
+      width = 1200,
+      height = 800,
+      format = "jpeg",
+    } = options
 
-  let sharpInstance = sharp(buffer).resize({
-    width,
-    height,
-    fit: "inside",
-    withoutEnlargement: true,
-  })
+    // Reducer indbygget caching for at mindske hukommelsesforbrug
+    sharp.cache(false)
+    sharp.concurrency(1)
 
-  if (format === "jpeg") {
-    sharpInstance = sharpInstance.jpeg({ quality })
-  } else if (format === "png") {
-    sharpInstance = sharpInstance.png({ quality })
-  } else if (format === "webp") {
-    sharpInstance = sharpInstance.webp({ quality })
+    let sharpInstance = sharp(buffer, { limitInputPixels: 30000000 }).resize({
+      width,
+      height,
+      fit: "inside",
+      withoutEnlargement: true,
+    })
+
+    if (format === "jpeg") {
+      sharpInstance = sharpInstance.jpeg({ quality, progressive: true })
+    } else if (format === "png") {
+      sharpInstance = sharpInstance.png({ quality, progressive: false })
+    } else if (format === "webp") {
+      sharpInstance = sharpInstance.webp({ quality })
+    }
+
+    return await sharpInstance.toBuffer()
+  } catch (error) {
+    console.error("Error i sharp billedkompression:", error)
+    // Returner den originale buffer som fallback
+    return buffer
   }
-
-  return await sharpInstance.toBuffer()
 }

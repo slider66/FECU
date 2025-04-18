@@ -34,12 +34,20 @@ export async function uploadPhoto(file: File, name?: string) {
       ? (fileType as "jpeg" | "png" | "webp")
       : "jpeg"
 
-    buffer = await compressImageBuffer(buffer, {
-      quality: 80,
-      width: 1920,
-      height: 1080,
-      format,
-    })
+    try {
+      buffer = await compressImageBuffer(buffer, {
+        quality: 75, // Reduceret kvalitet
+        width: 1200, // Reduceret størrelse
+        height: 800, // Reduceret størrelse
+        format,
+      })
+    } catch (compressionError) {
+      console.error(
+        "Fejl ved billedkompression, fortsætter med originalt billede:",
+        compressionError
+      )
+      // Vi fortsætter med originalt billede hvis kompression fejler
+    }
 
     // Upload filen til Supabase Storage
     const { data, error } = await supabase.storage

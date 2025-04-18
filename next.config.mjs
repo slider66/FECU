@@ -15,6 +15,9 @@ const nextConfig = {
   // Konfiguration til at håndtere fonts offline
   // Dette hjælper med at undgå netværksproblemer under bygning
   optimizeFonts: false,
+
+  // Brug standalone output for bedre serverless kompatibilitet
+  output: "standalone",
 }
 
 export default nextConfig
