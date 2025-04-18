@@ -5,6 +5,6 @@ middleware.ts
 .next/
 .vercel/
 
-# Ignorer lock files der kan skabe problemer
-package-lock.json
-yarn.lock 
+# IKKE ignorere package-lock.json mere, da den indeholder vigtige SWC-afhængigheder
+# package-lock.json
+# yarn.lock 
