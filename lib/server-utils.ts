@@ -1,6 +1,6 @@
 "use server"
 
-import sharp from "sharp"
+// Fjernet sharp import da det forårsager problemer ved deploy
 
 export async function compressImageBuffer(
   buffer: Buffer,
@@ -11,37 +11,9 @@ export async function compressImageBuffer(
     format?: "jpeg" | "png" | "webp"
   } = {}
 ): Promise<Buffer> {
-  try {
-    const {
-      quality = 80,
-      width = 1200,
-      height = 800,
-      format = "jpeg",
-    } = options
+  // Returnerer simpelthen den oprindelige buffer da server-side kompression med Sharp
+  // forårsager problemer under deployment i Vercel's serverless miljø
 
-    // Reducer indbygget caching for at mindske hukommelsesforbrug
-    sharp.cache(false)
-    sharp.concurrency(1)
-
-    let sharpInstance = sharp(buffer, { limitInputPixels: 30000000 }).resize({
-      width,
-      height,
-      fit: "inside",
-      withoutEnlargement: true,
-    })
-
-    if (format === "jpeg") {
-      sharpInstance = sharpInstance.jpeg({ quality, progressive: true })
-    } else if (format === "png") {
-      sharpInstance = sharpInstance.png({ quality, progressive: false })
-    } else if (format === "webp") {
-      sharpInstance = sharpInstance.webp({ quality })
-    }
-
-    return await sharpInstance.toBuffer()
-  } catch (error) {
-    console.error("Error i sharp billedkompression:", error)
-    // Returner den originale buffer som fallback
-    return buffer
-  }
+  // Note: Server-side billedkompression er deaktiveret og sker nu kun på klienten
+  return buffer
 }

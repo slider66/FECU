@@ -26,28 +26,16 @@ export async function uploadPhoto(file: File, name?: string) {
 
     // Konverter File til ArrayBuffer og derefter til Buffer
     const bytes = await file.arrayBuffer()
-    let buffer = Buffer.from(bytes)
+    const buffer = Buffer.from(bytes)
 
-    // Komprimér billedet på serversiden med sharp
+    // Bemærk: Vi springer server-side komprimering over nu, da billederne allerede
+    // er komprimeret på klientsiden via browser-image-compression biblioteket.
+    // Den tomme server-utils.compressImageBuffer funktion returnerer blot bufferen.
+
     const fileType = file.type.split("/")[1] as "jpeg" | "png" | "webp" | string
     const format = ["jpeg", "png", "webp"].includes(fileType)
       ? (fileType as "jpeg" | "png" | "webp")
       : "jpeg"
-
-    try {
-      buffer = await compressImageBuffer(buffer, {
-        quality: 75, // Reduceret kvalitet
-        width: 1200, // Reduceret størrelse
-        height: 800, // Reduceret størrelse
-        format,
-      })
-    } catch (compressionError) {
-      console.error(
-        "Fejl ved billedkompression, fortsætter med originalt billede:",
-        compressionError
-      )
-      // Vi fortsætter med originalt billede hvis kompression fejler
-    }
 
     // Upload filen til Supabase Storage
     const { data, error } = await supabase.storage

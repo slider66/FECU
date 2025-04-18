@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 
 import { setupSupabaseStorage } from "@/lib/supabase-setup"
 
+export const runtime = "edge"
+
 export async function GET() {
   try {
     const result = await setupSupabaseStorage()
