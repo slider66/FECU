@@ -5,6 +5,7 @@ import { nanoid } from "nanoid"
 
 import { sendMultiplePhotosNotification, sendPhotoNotification } from "./email"
 import { prisma } from "./prisma"
+import { compressImageBuffer } from "./server-utils"
 import { supabase } from "./supabase"
 
 // Type definition baseret på Prisma Photo model
@@ -25,13 +26,26 @@ export async function uploadPhoto(file: File, name?: string) {
 
     // Konverter File til ArrayBuffer og derefter til Buffer
     const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    let buffer = Buffer.from(bytes)
+
+    // Komprimér billedet på serversiden med sharp
+    const fileType = file.type.split("/")[1] as "jpeg" | "png" | "webp" | string
+    const format = ["jpeg", "png", "webp"].includes(fileType)
+      ? (fileType as "jpeg" | "png" | "webp")
+      : "jpeg"
+
+    buffer = await compressImageBuffer(buffer, {
+      quality: 80,
+      width: 1920,
+      height: 1080,
+      format,
+    })
 
     // Upload filen til Supabase Storage
     const { data, error } = await supabase.storage
       .from(bucketName)
       .upload(filename, buffer, {
-        contentType: file.type,
+        contentType: `image/${format}`,
         cacheControl: "3600",
       })
 

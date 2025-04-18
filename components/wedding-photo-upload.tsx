@@ -1,9 +1,10 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import imageCompression from "browser-image-compression"
 import { Check, ImageIcon, Upload, X } from "lucide-react"
 
 import { uploadPhotoForm } from "@/lib/actions"
@@ -19,10 +20,57 @@ export function WeddingPhotoUpload() {
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [name, setName] = useState<string>("")
+  const [compressionProgress, setCompressionProgress] = useState<number>(0)
+  const [isCompressing, setIsCompressing] = useState(false)
+  const [targetProgress, setTargetProgress] = useState<number>(0)
   const router = useRouter()
   const MAX_IMAGES = 15
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Effekt til at animere progressbaren mere jævnt
+  useEffect(() => {
+    if (!isCompressing) return
+
+    let interval: NodeJS.Timeout
+
+    if (compressionProgress < targetProgress) {
+      // Gør fremskridt langsommere med et interval
+      interval = setInterval(() => {
+        setCompressionProgress((prev) => {
+          const increment = Math.min(0.5, (targetProgress - prev) / 10)
+          const newValue = prev + increment
+
+          // Afrund til én decimal for jævn animation
+          return Math.min(parseFloat(newValue.toFixed(1)), targetProgress)
+        })
+      }, 50) // Opdater hver 50ms for en jævn animation
+    }
+
+    return () => {
+      if (interval) clearInterval(interval)
+    }
+  }, [isCompressing, compressionProgress, targetProgress])
+
+  const compressImage = async (file: File): Promise<File> => {
+    const options = {
+      maxSizeMB: 1, // Maksimal størrelse i MB
+      maxWidthOrHeight: 1920, // Begræns dimensioner
+      useWebWorker: true,
+      onProgress: (progress: number) => {
+        // Opdater målprocenten, men lad effekten håndtere den faktiske animation
+        setTargetProgress(Math.round(progress))
+      },
+    }
+
+    try {
+      return await imageCompression(file, options)
+    } catch (error) {
+      console.error("Fejl under komprimering:", error)
+      // Hvis komprimering fejler, returner den oprindelige fil
+      return file
+    }
+  }
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = Array.from(e.target.files || [])
     setError(null)
     setSuccess(false)
@@ -36,7 +84,6 @@ export function WeddingPhotoUpload() {
     }
 
     // Validér hver fil
-    const validFiles: File[] = []
     const validPreviews: string[] = []
 
     for (const file of selectedFiles) {
@@ -50,12 +97,54 @@ export function WeddingPhotoUpload() {
         return
       }
 
-      validFiles.push(file)
       validPreviews.push(URL.createObjectURL(file))
     }
 
-    setFiles((prev) => [...prev, ...validFiles])
+    // Først viser vi preview med originale billeder
     setPreviews((prev) => [...prev, ...validPreviews])
+
+    // Komprimerer billederne et efter et
+    setUploading(true)
+    setIsCompressing(true)
+    setCompressionProgress(0)
+    setTargetProgress(1) // Start med et lille fremskridt
+
+    const compressedFiles: File[] = []
+
+    try {
+      for (const file of selectedFiles) {
+        setTargetProgress(0) // Reset ved hvert nyt billede
+
+        // Kunstig forsinkelse for at vise starten af progressbaren
+        await new Promise((resolve) => setTimeout(resolve, 300))
+
+        // Gradvis overgang fra 0 til 5% for en mere naturlig start
+        setTargetProgress(5)
+        await new Promise((resolve) => setTimeout(resolve, 200))
+
+        const compressedFile = await compressImage(file)
+        compressedFiles.push(compressedFile)
+
+        // Kort pause mellem hvert billede
+        if (selectedFiles.length > 1) {
+          setTargetProgress(100)
+          await new Promise((resolve) => setTimeout(resolve, 400))
+        }
+      }
+
+      setFiles((prev) => [...prev, ...compressedFiles])
+    } catch (err) {
+      console.error("Komprimeringsfejl:", err)
+      setError("Komprimering af billeder fejlede. Prøv venligst igen.")
+    } finally {
+      // Sikr at vi viser 100% til sidst
+      setTargetProgress(100)
+      await new Promise((resolve) => setTimeout(resolve, 300))
+
+      setIsCompressing(false)
+      setUploading(false)
+      setCompressionProgress(0)
+    }
   }
 
   const removeFile = (index: number) => {
@@ -185,16 +274,34 @@ export function WeddingPhotoUpload() {
                 </div>
               ) : null}
 
+              {compressionProgress > 0 && isCompressing && (
+                <div className="w-full mb-4">
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div
+                      className="bg-rose-500 h-2.5 rounded-full transition-all duration-100 ease-in-out"
+                      style={{ width: `${compressionProgress}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1 text-center">
+                    {compressionProgress < 100
+                      ? `Komprimerer billeder: ${Math.round(
+                          compressionProgress
+                        )}%`
+                      : "Komprimering færdig"}
+                  </p>
+                </div>
+              )}
+
               <Card
                 className={`border-dashed border-2 rounded-lg p-6 w-full flex flex-col items-center justify-center cursor-pointer hover:bg-rose-50 transition-colors mb-4 bg-rose-100 ${
-                  files.length >= MAX_IMAGES
+                  files.length >= MAX_IMAGES || uploading
                     ? "opacity-50 cursor-not-allowed"
                     : ""
                 }`}
                 onClick={() => {
-                  if (files.length < MAX_IMAGES) {
+                  if (files.length < MAX_IMAGES && !uploading) {
                     document.getElementById("photo-upload")?.click()
-                  } else {
+                  } else if (files.length >= MAX_IMAGES) {
                     setError(
                       `Du kan maksimalt uploade ${MAX_IMAGES} billeder ad gangen`
                     )
@@ -207,10 +314,12 @@ export function WeddingPhotoUpload() {
                 <p className="text-sm font-medium mb-1 text-rose-500">
                   {files.length >= MAX_IMAGES
                     ? "Maksimalt antal billeder nået"
+                    : uploading
+                    ? "Behandler billeder..."
                     : "Klik for at vælge billeder"}
                 </p>
                 <p className="text-xs text-gray-600">
-                  Vælg de bedste øjeblikke
+                  Vælg de bedste øjeblikke (billeder komprimeres automatisk)
                 </p>
               </Card>
 
@@ -221,6 +330,7 @@ export function WeddingPhotoUpload() {
                 onChange={handleFileChange}
                 className="hidden"
                 multiple
+                disabled={uploading}
               />
 
               {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
