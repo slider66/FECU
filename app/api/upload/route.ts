@@ -6,12 +6,8 @@ import { uploadPhotoForm } from "../../../lib/actions"
 export const dynamic = "force-dynamic"
 
 // Tillad større uploads (50MB)
-export const config = {
-  api: {
-    bodyParser: false,
-    responseLimit: "50mb",
-  },
-}
+export const maxDuration = 60 // sekunder
+export const bodySize = "50mb"
 
 // Denne konfiguration angiver at route ikke bør parsere kroppen automatisk
 // Så vi kan acceptere store filer
