@@ -24,7 +24,7 @@ export function WeddingPhotoUpload() {
   const [isCompressing, setIsCompressing] = useState(false)
   const [targetProgress, setTargetProgress] = useState<number>(0)
   const router = useRouter()
-  const MAX_IMAGES = 15
+  const MAX_IMAGES = 16
 
   // Effekt til at animere progressbaren mere jævnt
   useEffect(() => {
