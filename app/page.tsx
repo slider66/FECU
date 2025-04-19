@@ -31,7 +31,7 @@ export default function Home() {
           <p className="mb-2 font-serif text-lg text-gray-600">
             Vores bryllupsfest
           </p>
-          <p className="text-sm text-gray-500">26. april 2025</p>
+          <p className="text-sm text-gray-500">07. juni 2025</p>
         </header>
 
         {/* Hero Image */}
@@ -58,7 +58,7 @@ export default function Home() {
             Del dine minder
           </h2>
           <p className="mb-6 text-gray-600">
-            Hjælp os med at optage alle de specielle øjeblikke fra vores bryllup
+            Hjælp os med at fange alle de specielle øjeblikke fra vores bryllup
           </p>
 
           <div className="flex flex-col gap-4">
