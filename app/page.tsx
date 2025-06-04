@@ -34,7 +34,7 @@ export default function Home() {
         {/* Hero Image */}
         <div className="animate-fade-in relative mb-8 h-64 w-full overflow-hidden rounded-2xl shadow-lg ">
           <Image
-            src="/Renas_Ayse2.jpeg"
+            src="/RenasAyse3.png"
             alt="Renas and Ayse"
             fill
             className="object-cover brightness-90"
