@@ -28,16 +28,13 @@ export default function Home() {
             </h1>
             <HeartIcon className="ml-2 size-6 text-rose-400" />
           </div>
-          <p className="mb-2 font-serif text-lg text-gray-600">
-            Vores bryllupsfest
-          </p>
           <p className="text-sm text-gray-500">07. juni 2025</p>
         </header>
 
         {/* Hero Image */}
         <div className="animate-fade-in relative mb-8 h-64 w-full overflow-hidden rounded-2xl shadow-lg ">
           <Image
-            src="/Renas_Ayse2.jpeg"
+            src="\Renas_Ayse2.jpeg"
             alt="Renas and Ayse"
             fill
             className="object-cover brightness-90"
@@ -78,6 +75,10 @@ export default function Home() {
               </Button>
             </Link>
           </div>
+
+          <p className="mt-4 text-sm text-gray-600 italic">
+            P.s. det er kun os der kan se dine billeder
+          </p>
         </div>
 
         {/* Footer */}
