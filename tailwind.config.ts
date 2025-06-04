@@ -100,6 +100,22 @@ const config = {
             opacity: "0",
           },
         },
+        "float-up-smooth": {
+          "0%": {
+            transform: "translate3d(0, 100vh, 0) scale(0.8)",
+            opacity: "0",
+          },
+          "15%": {
+            opacity: "0.6",
+          },
+          "85%": {
+            opacity: "0.6",
+          },
+          "100%": {
+            transform: "translate3d(0, -90vh, 0) scale(1.1)",
+            opacity: "0",
+          },
+        },
         "fade-in": {
           "0%": {
             opacity: "0",
@@ -115,6 +131,7 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "float-up": "float-up 6s ease-out infinite",
+        "float-up-smooth": "float-up-smooth 6s ease-out infinite",
         "fade-in": "fade-in 1s ease-out forwards",
       },
     },
