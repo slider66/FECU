@@ -1,23 +1,61 @@
-import { Metadata } from "next"
+"use client"
+
+import { useEffect, useState } from "react"
 import Link from "next/link"
-import { HeartIcon, Upload } from "lucide-react"
+import { HeartIcon } from "lucide-react"
 
 import { getPhotos } from "@/lib/actions"
-import { Button } from "@/components/ui/button"
 import { PhotoGallery } from "@/components/photo-gallery"
+import { SimpleLogin } from "@/components/simple-login"
 
-export const metadata: Metadata = {
-  title: "Bryllupsgalleri | Renas & Ayse's Bryllup",
-  description: "Se alle de dejlige billeder fra vores bryllup",
-  openGraph: {
-    title: "Bryllupsgalleri | Renas & Ayse's Bryllup",
-    description: "Se alle de dejlige billeder fra vores bryllup",
-    type: "website",
-  },
-}
+export default function GalleryPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [photos, setPhotos] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-export default async function GalleryPage() {
-  const photos = await getPhotos()
+  useEffect(() => {
+    // Tjek om brugeren allerede er logget ind (localStorage)
+    const authStatus = localStorage.getItem("gallery-auth")
+    if (authStatus === "true") {
+      setIsAuthenticated(true)
+    }
+    setLoading(false)
+  }, [])
+
+  useEffect(() => {
+    // Hent billeder når brugeren er authenticated
+    if (isAuthenticated) {
+      const fetchPhotos = async () => {
+        try {
+          const fetchedPhotos = await getPhotos()
+          setPhotos(fetchedPhotos)
+        } catch (error) {
+          console.error("Fejl ved hentning af billeder:", error)
+        }
+      }
+      fetchPhotos()
+    }
+  }, [isAuthenticated])
+
+  const handleLogin = () => {
+    setIsAuthenticated(true)
+    localStorage.setItem("gallery-auth", "true")
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-rose-50 to-rose-100 flex items-center justify-center">
+        <div className="text-center">
+          <HeartIcon className="h-8 w-8 text-rose-400 mx-auto mb-2 animate-pulse" />
+          <p className="text-gray-600">Indlæser...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return <SimpleLogin onLogin={handleLogin} />
+  }
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-rose-50 to-rose-100">
@@ -39,6 +77,15 @@ export default async function GalleryPage() {
           <p className="text-sm text-gray-500 mb-4">
             Minder fra vores særlige dag
           </p>
+          <button
+            onClick={() => {
+              setIsAuthenticated(false)
+              localStorage.removeItem("gallery-auth")
+            }}
+            className="text-xs text-gray-400 hover:text-gray-600 underline"
+          >
+            Log ud
+          </button>
         </header>
 
         {/* Gallery */}

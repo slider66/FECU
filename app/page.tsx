@@ -69,15 +69,6 @@ export default function Home() {
                   Upload billeder
                 </Button>
               </Link>
-
-              <Link href="/gallery" className="w-full">
-                <Button
-                  variant="outline"
-                  className="w-full border-rose-200 text-rose-600 transition-all hover:bg-rose-50 hidden"
-                >
-                  Se galleri
-                </Button>
-              </Link>
             </div>
 
             <p className="mt-4 text-sm text-gray-600 italic">
