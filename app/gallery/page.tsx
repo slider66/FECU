@@ -5,6 +5,7 @@ import Link from "next/link"
 import { HeartIcon } from "lucide-react"
 
 import { getPhotos } from "@/lib/actions"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { PhotoGallery } from "@/components/photo-gallery"
 import { SimpleLogin } from "@/components/simple-login"
 
@@ -12,6 +13,7 @@ export default function GalleryPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [photos, setPhotos] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [photosLoading, setPhotosLoading] = useState(false)
 
   useEffect(() => {
     // Tjek om brugeren allerede er logget ind (localStorage)
@@ -26,11 +28,14 @@ export default function GalleryPage() {
     // Hent billeder når brugeren er authenticated
     if (isAuthenticated) {
       const fetchPhotos = async () => {
+        setPhotosLoading(true)
         try {
           const fetchedPhotos = await getPhotos()
           setPhotos(fetchedPhotos)
         } catch (error) {
           console.error("Fejl ved hentning af billeder:", error)
+        } finally {
+          setPhotosLoading(false)
         }
       }
       fetchPhotos()
@@ -45,10 +50,7 @@ export default function GalleryPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-rose-50 to-rose-100 flex items-center justify-center">
-        <div className="text-center">
-          <HeartIcon className="h-8 w-8 text-rose-400 mx-auto mb-2 animate-pulse" />
-          <p className="text-gray-600">Indlæser...</p>
-        </div>
+        <LoadingSpinner text="Indlæser galleri..." size="lg" />
       </div>
     )
   }
@@ -90,7 +92,13 @@ export default function GalleryPage() {
 
         {/* Gallery */}
         <div className="animate-fade-in">
-          <PhotoGallery photos={photos} />
+          {photosLoading ? (
+            <div className="flex justify-center py-12">
+              <LoadingSpinner text="Henter billeder..." size="md" />
+            </div>
+          ) : (
+            <PhotoGallery photos={photos} />
+          )}
         </div>
       </div>
     </main>

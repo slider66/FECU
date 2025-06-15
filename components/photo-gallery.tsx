@@ -21,6 +21,19 @@ interface PhotoGalleryProps {
 
 export function PhotoGallery({ photos }: PhotoGalleryProps) {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
+  const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
+
+  const handleImageLoad = (photoId: string) => {
+    setLoadingImages((prev) => {
+      const newSet = new Set(prev)
+      newSet.delete(photoId)
+      return newSet
+    })
+  }
+
+  const handleImageLoadStart = (photoId: string) => {
+    setLoadingImages((prev) => new Set(prev).add(photoId))
+  }
 
   if (photos.length === 0) {
     return (
@@ -54,11 +67,21 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
             className="relative aspect-square cursor-pointer overflow-hidden rounded-lg shadow-md transition-transform hover:scale-[1.02]"
             onClick={() => setSelectedPhoto(photo)}
           >
+            {loadingImages.has(photo.id) && (
+              <div className="absolute inset-0 flex items-center justify-center bg-rose-50 z-10">
+                <div className="animate-pulse">
+                  <div className="h-4 w-4 bg-rose-300 rounded-full"></div>
+                </div>
+              </div>
+            )}
             <Image
               src={photo.path || "/placeholder.svg"}
               alt="Bryllupsbillede"
               fill
               className="object-cover"
+              onLoadStart={() => handleImageLoadStart(photo.id)}
+              onLoad={() => handleImageLoad(photo.id)}
+              onError={() => handleImageLoad(photo.id)}
             />
           </div>
         ))}

@@ -21,9 +21,15 @@ export function SimpleLogin({ onLogin }: SimpleLoginProps) {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
+    setError("")
+
+    // Simuler login-proces
+    await new Promise((resolve) => setTimeout(resolve, 1000))
 
     // Hardcoded credentials
     if (username === "admin" && password === "admin") {
@@ -32,6 +38,8 @@ export function SimpleLogin({ onLogin }: SimpleLoginProps) {
     } else {
       setError("Forkert brugernavn eller kode")
     }
+
+    setIsLoading(false)
   }
 
   return (
@@ -56,6 +64,7 @@ export function SimpleLogin({ onLogin }: SimpleLoginProps) {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                disabled={isLoading}
               />
             </div>
             <div>
@@ -65,6 +74,7 @@ export function SimpleLogin({ onLogin }: SimpleLoginProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={isLoading}
               />
             </div>
             {error && (
@@ -73,8 +83,35 @@ export function SimpleLogin({ onLogin }: SimpleLoginProps) {
             <Button
               type="submit"
               className="w-full bg-rose-500 hover:bg-rose-600"
+              disabled={isLoading}
             >
-              Log ind
+              {isLoading ? (
+                <span className="flex items-center">
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  Logger ind...
+                </span>
+              ) : (
+                "Log ind"
+              )}
             </Button>
           </form>
         </CardContent>
