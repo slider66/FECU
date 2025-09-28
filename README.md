@@ -1,100 +1,36 @@
-# QR Wedding Snap
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-A web application for wedding guests to upload and share photos from Renas & Ayse's special day.
+## Getting Started
 
-## Overview
+First, run the development server:
 
-QR Wedding Snap is a modern, responsive web application built with Next.js that allows wedding guests to easily upload photos from the wedding celebration. By scanning a QR code, guests can access the application, view the photo gallery, and contribute their own photos to create a shared memory collection.
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## Features
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- **Photo Upload**: Guests can easily upload photos directly from their devices
-- **Gallery View**: Browse all uploaded photos in an elegant gallery format
-- **Responsive Design**: Works seamlessly across mobile, tablet, and desktop devices
-- **Real-time Updates**: Photos appear in the gallery immediately after upload
-- **Minimal UI**: Clean, intuitive interface for all age groups
-- **Email Notifications**: Automatic email notifications with attached photos when guests upload images
-- **Hidden Gallery**: The gallery page is hidden from the main navigation and can only be accessed via the direct path `/gallery`
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## Screenshots
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-### Home Page
+## Learn More
 
-![Home Page](/public/README/01_index_page.png)
+To learn more about Next.js, take a look at the following resources:
 
-### Upload Page
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-![Upload Page](/public/README/02_upload_page.png)
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-### Upload Success
+## Deploy on Vercel
 
-![Upload Success](/public/README/03_upload_success_page.png)
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-### Hidden Gallery Page
-
-![Hidden Gallery Page](/public/README/04_gallery_page_hidden.png)
-
-## Technology Stack
-
-- **Frontend**: Next.js 14, React 18, Tailwind CSS
-- **Backend**: Next.js API Routes
-- **Database**: PostgreSQL via Prisma ORM
-- **Storage**: Supabase Storage for photo management
-- **Authentication**: Simple, guest-friendly approach
-- **Email**: Nodemailer for sending notifications
-- **Hosting**: Vercel
-
-## Development Setup
-
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   # or
-   pnpm install
-   ```
-3. Copy `.env.example` to `.env.local` and fill in the required environment variables (see Environment Variables section)
-4. Run the development server:
-   ```bash
-   npm run dev
-   # or
-   pnpm dev
-   ```
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-## Environment Variables
-
-The following environment variables are required:
-
-### App Configuration
-
-- `NEXT_PUBLIC_APP_URL`: The base URL of the application (e.g., https://ayserenas.dk)
-
-### Email Configuration
-
-- `EMAIL_HOST`: SMTP server host (e.g., smtp.gmail.com)
-- `EMAIL_PORT`: SMTP port (typically 587 for TLS)
-- `EMAIL_USER`: Email username/address
-- `EMAIL_PASSWORD`: App-specific password for email account
-- `NOTIFICATION_EMAIL`: Email to receive notifications
-
-### Supabase Configuration
-
-- `NEXT_PUBLIC_SUPABASE_URL`: Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase anonymous key
-- `SUPABASE_URL`: Same as NEXT_PUBLIC_SUPABASE_URL (for server-side)
-- `SUPABASE_ANON_KEY`: Same as NEXT_PUBLIC_SUPABASE_ANON_KEY (for server-side)
-- `SUPABASE_SERVICE_ROLE_KEY`: Supabase service role key for privileged operations
-
-### Database Configuration
-
-- `DATABASE_URL`: PostgreSQL connection string via pooler
-- `DIRECT_URL`: Direct PostgreSQL connection string for Prisma CLI
-
-## Deployment
-
-The application is optimized for deployment on Vercel. Simply connect your repository to Vercel and ensure the environment variables are configured.
-
-## License
-
-This project is private and intended for personal use only.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
