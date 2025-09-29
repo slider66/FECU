@@ -65,7 +65,8 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json(
             {
-                message: "Billede(rne) blev uploadet", // Message to the user
+                message:
+                    "Mange tak for dine billeder! Vi glæder os til at se dem ♥️", // Message to the user
                 name: name, // Name of the uploader
                 imageCount: uploadedPhotos.length, // Number of images uploaded
                 photos: uploadedPhotos, // The uploaded photos
