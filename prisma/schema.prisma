@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+        
+
+model Photo {
+  id         String   @id @default(cuid())
+  filename   String   // Original filename fra bruger
+  path       String   // Public URL til billede
+  createdAt  DateTime @default(now())
+  uploadedBy String  // Navn eller identifier for uploader
+  bucketPath String   @unique // Storage path i Supabase
+  fileSize   Int?     // Bytes - nyttig til at overvåge storage
+  mimeType   String?  // image/jpeg, image/png - god til validation
+  
+  @@map("photos")
+}
