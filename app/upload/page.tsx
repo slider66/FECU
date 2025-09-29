@@ -1,5 +1,5 @@
 import { Container, Section } from "@/components/ds";
-import { WeddingUploaderComponent } from "./__components/WeddingUploaderComponent";
+import { WeddingUploaderComponent } from "./_components/WeddingUploaderComponent";
 
 export default function UploadPage() {
     return (
