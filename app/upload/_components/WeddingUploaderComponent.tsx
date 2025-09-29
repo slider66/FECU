@@ -85,10 +85,12 @@ export function WeddingUploaderComponent() {
         }
     };
 
+    // Used as a counter for the number of images
     const images = useWatch({
         control: form.control,
         name: "images",
     });
+    const isFormValid = form.formState.isValid; // Check if the form is valid - either enable or disable the button
 
     return (
         <Form {...form}>
@@ -140,7 +142,10 @@ export function WeddingUploaderComponent() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit" className="w-full">
+                <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={!isFormValid}>
                     Upload {images?.length || 0} billede
                     {images?.length !== 1 ? "r" : ""}
                 </Button>
