@@ -14,6 +14,8 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5MB
 const ACCEPTED_IMAGE_MIME_TYPES = [
@@ -60,8 +62,11 @@ export function WeddingUploaderComponent() {
         },
     });
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const onSubmit = async (data: z.infer<typeof FormSchema>) => {
         try {
+            setIsLoading(true);
             // Create a FormData object to send the data to the API
             const formData = new FormData();
             formData.append("name", data.name);
@@ -82,6 +87,8 @@ export function WeddingUploaderComponent() {
         } catch (error) {
             toast.error("Billederne blev ikke uploadet");
             console.error(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -145,9 +152,18 @@ export function WeddingUploaderComponent() {
                 <Button
                     type="submit"
                     className="w-full"
-                    disabled={!isFormValid}>
-                    Upload {images?.length || 0} billede
-                    {images?.length !== 1 ? "r" : ""}
+                    disabled={!isFormValid || isLoading}>
+                    {isLoading ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Uploader {images?.length || 0} billede
+                            {images?.length !== 1 ? "r" : ""}...
+                        </>
+                    ) : (
+                        `Upload ${images?.length || 0} billede${
+                            images?.length !== 1 ? "r" : ""
+                        }`
+                    )}
                 </Button>
             </form>
         </Form>
