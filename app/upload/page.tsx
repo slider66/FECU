@@ -1,5 +1,11 @@
 import { Container, Section } from "@/components/ds";
 import { WeddingUploaderComponent } from "./_components/WeddingUploaderComponent";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Upload billeder | Renas & Ayse's Bryllup",
+    description: "Upload dine billeder til vores bryllup",
+};
 
 export default function UploadPage() {
     return (

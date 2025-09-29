@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
     title: "Renas & Ayse's Bryllup",
-    description: "Renas & Ayse's Bryllup",
+    description: "Renas & Ayse's Bryllup - Renas og Ayse",
 };
 
 export default function RootLayout({
