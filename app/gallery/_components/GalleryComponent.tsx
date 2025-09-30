@@ -44,7 +44,7 @@ export async function GalleryComponent() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {data.map((photo) => (
                         <div key={photo.id} className="relative ">
-                            <div className="absolute top-2 right-2">
+                            <div>
                                 <form
                                     action={deletePhoto}
                                     className="absolute top-2 right-2">
