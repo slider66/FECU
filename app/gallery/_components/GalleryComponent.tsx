@@ -43,31 +43,30 @@ export async function GalleryComponent() {
             <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {data.map((photo) => (
-                        <div key={photo.id} className="relative ">
-                            <div>
-                                <form
-                                    action={deletePhoto}
-                                    className="absolute top-2 right-2">
-                                    <input
-                                        type="hidden"
-                                        name="id"
-                                        value={photo.id}
-                                    />
-                                    <Button
-                                        variant="outline"
-                                        size="icon"
-                                        type="submit">
-                                        <Trash2 className="w-4 h-4" />
-                                    </Button>
-                                </form>
-                            </div>
+                        <div
+                            key={photo.id}
+                            className="relative aspect-square rounded-lg overflow-hidden ">
+                            <form
+                                action={deletePhoto}
+                                className="absolute top-2 right-2 z-10">
+                                <input
+                                    type="hidden"
+                                    name="id"
+                                    value={photo.id}
+                                />
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    type="submit">
+                                    <Trash2 className="w-4 h-4" />
+                                </Button>
+                            </form>
                             <Image
                                 key={photo.id}
                                 src={photo.path}
                                 alt={photo.filename}
-                                width={1000}
-                                height={1000}
-                                className="rounded-lg"
+                                className="object-cover"
+                                fill
                             />
                             <div className="absolute bottom-2 left-2 right-2 px-3 py-1 bg-accent/70 text-accent-foreground text-sm rounded-lg font-mono">
                                 <span className="block break-words line-clamp-2 font-bold">
