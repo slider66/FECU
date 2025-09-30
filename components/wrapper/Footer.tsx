@@ -7,9 +7,14 @@ export default function Footer() {
         <footer>
             <Section>
                 <Container>
-                    <p className="text-center">
-                        Lavet med ♥️ af Gøkmen Øzbayir
-                    </p>
+                    <div className="flex flex-col gap-2">
+                        <p className="text-center font-serif text-muted-foreground text-sm ">
+                            Lavet med ♥️ af Gøkmen Øzbayir
+                        </p>
+                        <p className="text-center  text-muted-foreground text-xs">
+                            Copyright © {new Date().getFullYear()} www.gokm8.xyz
+                        </p>
+                    </div>
                 </Container>
             </Section>
         </footer>

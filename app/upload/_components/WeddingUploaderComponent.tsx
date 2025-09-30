@@ -169,11 +169,11 @@ export function WeddingUploaderComponent() {
 
                                                 {/* Card for the file input */}
                                                 <label htmlFor="file-upload">
-                                                    <Card className="flex items-center justify-center w-full h-32 px-4 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 hover:bg-gray-50 shadow-none">
+                                                    <Card className="flex items-center justify-center w-full h-32 px-4 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-muted-foreground hover:bg-muted/50 shadow-none transition-colors">
                                                         <CardContent>
-                                                            <ImageIcon className="w-6 h-6 justify-self-center mb-2" />
-                                                            <div className="flex flex-col items-center justify-center ">
-                                                                <p>
+                                                            <ImageIcon className="w-8 h-8 justify-self-center mb-2 text-muted-foreground" />
+                                                            <div className="flex flex-col items-center justify-center gap-1">
+                                                                <p className="text-md font-medium text-muted-foreground font-serif">
                                                                     Klik for at
                                                                     vælge
                                                                     billeder
@@ -181,7 +181,7 @@ export function WeddingUploaderComponent() {
                                                                 {images &&
                                                                     images.length >
                                                                         0 && (
-                                                                        <p>
+                                                                        <p className="text-sm  text-muted-foreground">
                                                                             {
                                                                                 images.length
                                                                             }{" "}
@@ -207,6 +207,7 @@ export function WeddingUploaderComponent() {
                         </CardContent>
                         <CardFooter>
                             <Button
+                                size="lg"
                                 type="submit"
                                 className="w-full"
                                 disabled={!isFormValid || isLoading}>

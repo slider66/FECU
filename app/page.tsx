@@ -34,10 +34,12 @@ export default function Home() {
                         <CardHeader>
                             <div className="items-center justify-center flex flex-col gap-2 text-center">
                                 <CardTitle>
-                                    <h2>Del dine minder</h2>
+                                    <h2 className="font-serif text-xl font-semibold">
+                                        Del dine minder
+                                    </h2>
                                 </CardTitle>
                                 <CardDescription>
-                                    <p>
+                                    <p className="text-md text-muted-foreground">
                                         Hjælp os med at fange alle de specielle
                                         øjeblikke fra vores bryllup
                                     </p>
@@ -55,7 +57,9 @@ export default function Home() {
                             </div>
                         </CardContent>
                         <CardFooter className="items-center justify-center">
-                            <p>P.s. det er kun os der kan se dine billeder</p>
+                            <p className="text-xs text-muted-foreground italic">
+                                P.s. det er kun os der kan se dine billeder
+                            </p>
                         </CardFooter>
                     </Card>
                 </Container>
