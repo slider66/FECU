@@ -1,6 +1,8 @@
 import { Container, Section } from "@/components/ds";
 import { WeddingUploaderComponent } from "./_components/WeddingUploaderComponent";
 import { Metadata } from "next";
+import Link from "next/link";
+import { ArrowLeftIcon } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Upload billeder | Renas & Ayse's Bryllup",
@@ -18,6 +20,12 @@ export default function UploadPage() {
             </Container>
             <Container>
                 <WeddingUploaderComponent />
+                <div className="flex flex-row gap-2 items-center justify-center mt-4">
+                    <ArrowLeftIcon className="w-4 h-4" />
+                    <p>
+                        <Link href="/">Tilbage</Link>
+                    </p>
+                </div>
             </Container>
         </Section>
     );
