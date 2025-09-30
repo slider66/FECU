@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -63,6 +62,7 @@ export function WeddingUploaderComponent() {
     });
 
     const [isLoading, setIsLoading] = useState(false);
+    const [fileInputKey, setFileInputKey] = useState(Date.now()); // Reset the file input when the key changes
 
     const onSubmit = async (data: z.infer<typeof FormSchema>) => {
         try {
@@ -84,6 +84,8 @@ export function WeddingUploaderComponent() {
             const result = await response.json();
 
             toast.success(result.message);
+            form.reset();
+            setFileInputKey(Date.now()); // Reset the file input when the key changes
         } catch (error) {
             toast.error("Billederne blev ikke uploadet");
             console.error(error);
@@ -131,6 +133,7 @@ export function WeddingUploaderComponent() {
                             <FormLabel>Dine billeder</FormLabel>
                             <FormControl>
                                 <Input
+                                    key={fileInputKey} // Reset the file input when the key changes
                                     type="file"
                                     multiple
                                     accept="image/*"
