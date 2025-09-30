@@ -26,14 +26,12 @@ export default function UploadPage() {
             <WeddingUploaderComponent />
             <Container>
                 <div className="flex flex-row gap-2 items-center justify-center">
-                    <ArrowLeftIcon className="w-4 h-4" />
-                    <p>
-                        <Link
-                            className=" text-muted-foreground hover:text-primary"
-                            href="/">
-                            Tilbage
-                        </Link>
-                    </p>
+                    <Link
+                        className="flex flex-row gap-2 items-center text-muted-foreground hover:text-primary"
+                        href="/">
+                        <ArrowLeftIcon className="w-4 h-4" />
+                        Tilbage
+                    </Link>
                 </div>
             </Container>
         </Section>
