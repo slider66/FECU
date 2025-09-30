@@ -23,7 +23,10 @@ export default function UploadPage() {
                 </div>
             </Container>
 
-            <WeddingUploaderComponent />
+            <Container>
+                <WeddingUploaderComponent />
+            </Container>
+
             <Container>
                 <div className="flex flex-row gap-2 items-center justify-center">
                     <Link
