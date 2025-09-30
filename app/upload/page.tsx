@@ -18,15 +18,13 @@ export default function UploadPage() {
                     <p>Del dine yndlings øjeblikke fra vores bryllup</p>
                 </div>
             </Container>
-            <Container>
-                <WeddingUploaderComponent />
-                <div className="flex flex-row gap-2 items-center justify-center mt-4">
-                    <ArrowLeftIcon className="w-4 h-4" />
-                    <p>
-                        <Link href="/">Tilbage</Link>
-                    </p>
-                </div>
-            </Container>
+            <WeddingUploaderComponent />
+            <div className="flex flex-row gap-2 items-center justify-center mt-2">
+                <ArrowLeftIcon className="w-4 h-4" />
+                <p>
+                    <Link href="/">Tilbage</Link>
+                </p>
+            </div>
         </Section>
     );
 }

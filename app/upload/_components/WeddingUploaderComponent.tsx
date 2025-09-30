@@ -14,7 +14,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { ArrowLeftIcon, ImageIcon, Loader2, Upload } from "lucide-react";
+import {
+    Card,
+    CardHeader,
+    CardContent,
+    CardFooter,
+} from "@/components/ui/card";
+import { Container } from "@/components/ds";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5MB
 const ACCEPTED_IMAGE_MIME_TYPES = [
@@ -102,73 +109,125 @@ export function WeddingUploaderComponent() {
     const isFormValid = form.formState.isValid; // Check if the form is valid - either enable or disable the button
 
     return (
-        <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="w-full space-y-6">
-                {/* Name */}
-                <FormField
-                    control={form.control}
-                    name="name" // equal to the name in the FormSchema
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Dit navn</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="text"
-                                    placeholder="Indtast dit navn"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                {/* Billeder */}
-                <FormField
-                    control={form.control}
-                    name="images" // equal to the name in the FormSchema
-                    render={({ field: { value, onChange, ...fieldProps } }) => (
-                        <FormItem>
-                            <FormLabel>Dine billeder</FormLabel>
-                            <FormControl>
-                                <Input
-                                    key={fileInputKey} // Reset the file input when the key changes
-                                    type="file"
-                                    multiple
-                                    accept="image/*"
-                                    placeholder="Indtast dine billeder"
-                                    onChange={(e) => {
-                                        const files = e.target.files;
-                                        onChange(
-                                            files ? Array.from(files) : []
-                                        );
-                                    }}
-                                    {...fieldProps}
-                                />
-                            </FormControl>
+        <Container>
+            <Card>
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="w-full space-y-6">
+                        {/* Name */}
+                        <CardHeader>
+                            <FormField
+                                control={form.control}
+                                name="name" // equal to the name in the FormSchema
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Dit navn</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="text"
+                                                placeholder="Indtast dit navn"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </CardHeader>
+                        {/* Billeder */}
+                        <CardContent>
+                            <FormField
+                                control={form.control}
+                                name="images" // equal to the name in the FormSchema
+                                render={({
+                                    field: { value, onChange, ...fieldProps },
+                                }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <div>
+                                                <Input
+                                                    key={fileInputKey}
+                                                    type="file"
+                                                    multiple
+                                                    accept="image/*"
+                                                    className="hidden" // see the card below instead
+                                                    id="file-upload"
+                                                    onChange={(e) => {
+                                                        const files =
+                                                            e.target.files;
+                                                        onChange(
+                                                            files
+                                                                ? Array.from(
+                                                                      files
+                                                                  )
+                                                                : []
+                                                        );
+                                                    }}
+                                                    {...fieldProps}
+                                                />
 
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={!isFormValid || isLoading}>
-                    {isLoading ? (
-                        <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Uploader {images?.length || 0} billede
-                            {images?.length !== 1 ? "r" : ""}...
-                        </>
-                    ) : (
-                        `Upload ${images?.length || 0} billede${
-                            images?.length !== 1 ? "r" : ""
-                        }`
-                    )}
-                </Button>
-            </form>
-        </Form>
+                                                {/* Card for the file input */}
+                                                <label htmlFor="file-upload">
+                                                    <Card className="flex items-center justify-center w-full h-32 px-4 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 hover:bg-gray-50 shadow-none">
+                                                        <CardContent>
+                                                            <ImageIcon className="w-6 h-6 justify-self-center mb-2" />
+                                                            <div className="flex flex-col items-center justify-center ">
+                                                                <p>
+                                                                    Klik for at
+                                                                    vælge
+                                                                    billeder
+                                                                </p>
+                                                                {images &&
+                                                                    images.length >
+                                                                        0 && (
+                                                                        <p>
+                                                                            {
+                                                                                images.length
+                                                                            }{" "}
+                                                                            billede
+                                                                            {images.length !==
+                                                                            1
+                                                                                ? "r"
+                                                                                : ""}{" "}
+                                                                            valgt
+                                                                        </p>
+                                                                    )}
+                                                            </div>
+                                                        </CardContent>
+                                                    </Card>
+                                                </label>
+                                            </div>
+                                        </FormControl>
+
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </CardContent>
+                        <CardFooter>
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={!isFormValid || isLoading}>
+                                {isLoading ? (
+                                    <>
+                                        <Loader2 className=" h-4 w-4 animate-spin" />
+                                        Uploader {images?.length || 0} billede
+                                        {images?.length !== 1 ? "r" : ""}...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Upload className=" h-4 w-4" />
+                                        Upload {images?.length || 0} billede
+                                        {images?.length !== 1 ? "r" : ""}
+                                    </>
+                                )}
+                            </Button>
+                        </CardFooter>
+                    </form>
+                </Form>
+            </Card>
+        </Container>
     );
 }
