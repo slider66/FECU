@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/utils/supabase/admin";
 import { prisma } from "@/lib/prisma";
+import { sendMailWithPhotos } from "@/lib/transport_nodemailer";
 
 export async function POST(req: NextRequest) {
     try {
@@ -63,6 +64,18 @@ export async function POST(req: NextRequest) {
             name
         );
 
+        try {
+            await sendMailWithPhotos(
+                name,
+                uploadedPhotos.length,
+                uploadedPhotos
+            );
+            console.log("Email sent successfully!");
+        } catch (error) {
+            console.error("Error sending email:", error);
+        }
+
+        // Return the response
         return NextResponse.json(
             {
                 message:
