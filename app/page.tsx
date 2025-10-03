@@ -19,18 +19,14 @@ export default function Home() {
             <Section>
                 {/* Content */}
                 <Container>
-                    <div className="relative rounded-2xl overflow-hidden shadow-sm w-full h-auto">
-                        <Image
-                            src="/Renas-and-Ayse.png"
-                            alt="Bryllup"
-                            width={1000}
-                            height={1000}
-                            className="rounded-2xl w-full h-auto"
-                            priority
-                        />
-                        {/* Overlay to the image */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-primary/30 to-primary/15 pointer-events-none" />
-                    </div>
+                    <Image
+                        src="/Renas-and-Ayse.png"
+                        alt="Bryllup"
+                        width={1000}
+                        height={1000}
+                        className="rounded-2xl"
+                        priority
+                    />
                 </Container>
 
                 {/* CTA */}
