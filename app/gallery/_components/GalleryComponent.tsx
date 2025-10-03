@@ -1,11 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { prisma } from "@/lib/prisma";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
 import { revalidatePath } from "next/cache";
 import { supabaseAdmin } from "@/utils/supabase/admin";
 
+// Delete photo function
 async function deletePhoto(formData: FormData) {
     "use server";
 
@@ -58,7 +57,8 @@ export async function GalleryComponent() {
                             <div
                                 key={photo.id}
                                 className="relative aspect-square rounded-lg overflow-hidden ">
-                                <form
+                                {/* Delete button */}
+                                {/* <form
                                     action={deletePhoto}
                                     className="absolute top-2 right-2 z-10">
                                     <input
@@ -72,7 +72,9 @@ export async function GalleryComponent() {
                                         type="submit">
                                         <Trash2 className="w-4 h-4" />
                                     </Button>
-                                </form>
+                                </form> */}
+
+                                {/* Image */}
                                 <Image
                                     key={photo.id}
                                     src={photo.path}
@@ -80,6 +82,8 @@ export async function GalleryComponent() {
                                     className="object-cover"
                                     fill
                                 />
+
+                                {/* Uploaded by */}
                                 <div className="absolute bottom-2 left-2 right-2 px-3 py-1 bg-accent/70 text-accent-foreground text-sm rounded-lg font-mono">
                                     <span className="block break-words line-clamp-2 font-bold">
                                         Uploadet af {photo.uploadedBy}
