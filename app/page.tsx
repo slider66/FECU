@@ -26,6 +26,7 @@ export default function Home() {
                             width={1000}
                             height={1000}
                             className="rounded-2xl"
+                            priority
                         />
                         {/* Overlay to the image */}
                         <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-primary/30 to-primary/15 pointer-events-none" />
