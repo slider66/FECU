@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/card";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5MB
+const MAX_FILES = 10; // Maximum 10 images per upload
 const ACCEPTED_IMAGE_MIME_TYPES = [
     "image/jpeg",
     "image/jpg",
@@ -39,6 +40,9 @@ const FormSchema = z.object({
         .array(z.instanceof(File))
         .min(1, {
             message: "Mindst et billede er påkrævet",
+        })
+        .max(MAX_FILES, {
+            message: `Du kan maksimalt uploade ${MAX_FILES} billeder ad gangen`,
         })
         .refine(
             (images) =>
