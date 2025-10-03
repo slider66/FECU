@@ -6,6 +6,7 @@ import { Layout } from "@/components/ds";
 import Header from "@/components/wrapper/Header";
 import Footer from "@/components/wrapper/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import { Analytics } from "@vercel/analytics/react";
 
 const lora = Lora({
     variable: "--font-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
             <body className={`${lora.variable} ${playfairDisplay.variable}`}>
                 <Header />
                 {children}
+                <Analytics />
                 <Footer />
                 <Toaster />
             </body>
