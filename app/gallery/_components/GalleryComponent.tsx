@@ -41,41 +41,54 @@ export async function GalleryComponent() {
     return (
         <Card>
             <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {data.map((photo) => (
-                        <div
-                            key={photo.id}
-                            className="relative aspect-square rounded-lg overflow-hidden ">
-                            <form
-                                action={deletePhoto}
-                                className="absolute top-2 right-2 z-10">
-                                <input
-                                    type="hidden"
-                                    name="id"
-                                    value={photo.id}
-                                />
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    type="submit">
-                                    <Trash2 className="w-4 h-4" />
-                                </Button>
-                            </form>
-                            <Image
+                {data.length === 0 ? (
+                    //  if no data, show this:
+                    <div className="flex flex-col items-center justify-center py-12 text-center gap-2">
+                        <p className="text-muted-foreground text-lg">
+                            Der er ingen billeder at vise
+                        </p>
+                        <p className="text-muted-foreground text-sm">
+                            Upload det første billede for at komme i gang
+                        </p>
+                    </div>
+                ) : (
+                    //  if data, show this:
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {data.map((photo) => (
+                            <div
                                 key={photo.id}
-                                src={photo.path}
-                                alt={photo.filename}
-                                className="object-cover"
-                                fill
-                            />
-                            <div className="absolute bottom-2 left-2 right-2 px-3 py-1 bg-accent/70 text-accent-foreground text-sm rounded-lg font-mono">
-                                <span className="block break-words line-clamp-2 font-bold">
-                                    Uploadet af {photo.uploadedBy}
-                                </span>
+                                className="relative aspect-square rounded-lg overflow-hidden ">
+                                <form
+                                    action={deletePhoto}
+                                    className="absolute top-2 right-2 z-10">
+                                    <input
+                                        type="hidden"
+                                        name="id"
+                                        value={photo.id}
+                                    />
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        type="submit">
+                                        <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                </form>
+                                <Image
+                                    key={photo.id}
+                                    src={photo.path}
+                                    alt={photo.filename}
+                                    className="object-cover"
+                                    fill
+                                />
+                                <div className="absolute bottom-2 left-2 right-2 px-3 py-1 bg-accent/70 text-accent-foreground text-sm rounded-lg font-mono">
+                                    <span className="block break-words line-clamp-2 font-bold">
+                                        Uploadet af {photo.uploadedBy}
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </CardContent>
         </Card>
     );
