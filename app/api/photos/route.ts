@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/utils/supabase/admin";
 import { prisma } from "@/lib/prisma";
 import { sendMailWithPhotos } from "@/lib/transport_nodemailer";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: NextRequest) {
     try {
@@ -56,6 +57,9 @@ export async function POST(req: NextRequest) {
 
         // Wait for all uploads to finish
         const uploadedPhotos = await Promise.all(uploadPromises);
+
+        // Revalidate gallery page to show new photos immediately
+        revalidatePath("/gallery");
 
         console.log(
             "Success! Uploaded",
