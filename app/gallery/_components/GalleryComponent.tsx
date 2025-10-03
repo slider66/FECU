@@ -92,7 +92,7 @@ export async function GalleryComponent() {
                                 {/* Uploaded by */}
                                 <div className="absolute bottom-2 left-2 right-2 px-3 py-1 bg-accent/70 text-accent-foreground text-sm rounded-lg font-mono">
                                     <span className="block break-words line-clamp-2 font-bold">
-                                        Uploadet af {photo.uploadedBy}
+                                        {photo.uploadedBy}
                                     </span>
                                 </div>
                             </div>
