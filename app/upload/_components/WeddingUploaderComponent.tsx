@@ -65,6 +65,7 @@ const FormSchema = z.object({
 export function WeddingUploaderComponent() {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
+        mode: "onChange", // Validate on every change
         defaultValues: {
             name: "",
             images: [],
