@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import { revalidatePath } from "next/cache";
 import { supabaseAdmin } from "@/utils/supabase/admin";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 
 // Delete photo function
 async function deletePhoto(formData: FormData) {
@@ -31,6 +33,8 @@ async function deletePhoto(formData: FormData) {
 }
 
 export async function GalleryComponent() {
+    const enableDelete = false; // Set to true to enable delete functionality
+
     const data = await prisma.photo.findMany({
         orderBy: {
             createdAt: "desc",
@@ -58,21 +62,23 @@ export async function GalleryComponent() {
                                 key={photo.id}
                                 className="relative aspect-square rounded-lg overflow-hidden ">
                                 {/* Delete button */}
-                                {/* <form
-                                    action={deletePhoto}
-                                    className="absolute top-2 right-2 z-10">
-                                    <input
-                                        type="hidden"
-                                        name="id"
-                                        value={photo.id}
-                                    />
-                                    <Button
-                                        variant="outline"
-                                        size="icon"
-                                        type="submit">
-                                        <Trash2 className="w-4 h-4" />
-                                    </Button>
-                                </form> */}
+                                {enableDelete && (
+                                    <form
+                                        action={deletePhoto}
+                                        className="absolute top-2 right-2 z-10">
+                                        <input
+                                            type="hidden"
+                                            name="id"
+                                            value={photo.id}
+                                        />
+                                        <Button
+                                            variant="outline"
+                                            size="icon"
+                                            type="submit">
+                                            <Trash2 className="w-4 h-4" />
+                                        </Button>
+                                    </form>
+                                )}
 
                                 {/* Image */}
                                 <Image
