@@ -30,7 +30,8 @@ export default function RootLayout({
 }>) {
     return (
         <Layout>
-            <body className={`${lora.variable} ${playfairDisplay.variable}`}>
+            <body
+                className={`${lora.variable} ${playfairDisplay.variable} flex flex-col min-h-screen`}>
                 <Header />
                 {children}
                 <Analytics />

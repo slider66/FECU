@@ -5,7 +5,7 @@ import { Section } from "../ds";
 
 export default function Footer() {
     return (
-        <footer>
+        <footer className="mt-auto">
             <Section>
                 <Container>
                     <div className="flex flex-col gap-2">
