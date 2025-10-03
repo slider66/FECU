@@ -22,11 +22,11 @@ export default function GalleryPage() {
                     </p>
                 </div>
             </Container>
-            <Container className="max-w-3xl">
-                <Suspense fallback={<GalleryLoading />}>
+            <Suspense fallback={<GalleryLoading />}>
+                <Container className="max-w-3xl">
                     <GalleryComponent />
-                </Suspense>
-            </Container>
+                </Container>
+            </Suspense>
         </Section>
     );
 }
