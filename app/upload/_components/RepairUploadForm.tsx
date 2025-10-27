@@ -59,6 +59,12 @@ const FormSchema = z.object({
         .max(48, { message: "El nombre es demasiado largo." })
         .optional()
         .or(z.literal("")),
+    comments: z
+        .string()
+        .trim()
+        .max(400, { message: "El comentario es demasiado largo." })
+        .optional()
+        .or(z.literal("")),
     images: z
         .array(z.instanceof(File))
         .min(1, { message: "Debes elegir al menos una foto." })
@@ -103,6 +109,7 @@ export function RepairUploadForm({
                 ? initialStage
                 : "ENTRY",
             technician: "",
+            comments: "",
             images: [],
         },
     });
@@ -131,6 +138,9 @@ export function RepairUploadForm({
             if (data.technician) {
                 formData.append("technician", data.technician);
             }
+            if (data.comments) {
+                formData.append("comments", data.comments);
+            }
 
             data.images.forEach((image) => {
                 formData.append("images", image);
@@ -154,6 +164,7 @@ export function RepairUploadForm({
                 repairNumber: preservedRepair,
                 stage: preservedStage,
                 technician: data.technician ?? "",
+                comments: data.comments ?? "",
                 images: [],
             });
             setFileInputKey(Date.now());
@@ -265,6 +276,25 @@ export function RepairUploadForm({
                                     </FormItem>
                                 )}
                             />
+
+                            <FormField
+                                control={form.control}
+                                name="comments"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Comentarios (opcional)</FormLabel>
+                                        <FormControl>
+                                            <textarea
+                                                rows={3}
+                                                placeholder="Notas relevantes sobre el equipo o los daños observados"
+                                                className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:opacity-50"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                         </div>
                     </CardHeader>
 
@@ -272,7 +302,7 @@ export function RepairUploadForm({
                         <FormField
                             control={form.control}
                             name="images"
-                            render={({ field: { onChange, ...fieldProps } }) => (
+                            render={({ field: { onChange, onBlur, name, ref } }) => (
                                 <FormItem>
                                     <FormControl>
                                         <div>
@@ -284,27 +314,21 @@ export function RepairUploadForm({
                                                 capture="environment"
                                                 className="hidden"
                                                 id="file-upload"
+                                                onBlur={onBlur}
+                                                name={name}
+                                                ref={ref}
                                                 onChange={(event) => {
-                                                    const files =
-                                                        event.target.files;
+                                                    const files = event.target.files;
                                                     const clonedFiles = files
-                                                        ? Array.from(
-                                                              files,
-                                                              (file) =>
-                                                                  new File(
-                                                                      [file],
-                                                                      file.name,
-                                                                      {
-                                                                          type: file.type,
-                                                                          lastModified:
-                                                                              file.lastModified,
-                                                                      }
-                                                                  )
+                                                        ? Array.from(files, (file) =>
+                                                              new File([file], file.name, {
+                                                                  type: file.type,
+                                                                  lastModified: file.lastModified,
+                                                              })
                                                           )
                                                         : [];
                                                     onChange(clonedFiles);
                                                 }}
-                                                {...fieldProps}
                                             />
                                             <label htmlFor="file-upload">
                                                 <Card className="flex items-center justify-center w-full h-32 px-4 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-muted-foreground hover:bg-muted/50 shadow-none transition-colors">

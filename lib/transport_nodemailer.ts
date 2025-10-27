@@ -14,7 +14,8 @@ export async function sendMailWithPhotos(
     stage: RepairStage,
     imageCount: number,
     photos: Photo[],
-    technician?: string | null
+    technician?: string | null,
+    comments?: string | null
 ) {
     if (!process.env.GOOGLE_EMAIL || !process.env.GOOGLE_APP_PASSWORD) {
         return;
@@ -23,6 +24,9 @@ export async function sendMailWithPhotos(
     const stageLabel = stage === "ENTRY" ? "Ingreso" : "Salida";
     const technicianInfo = technician
         ? `<p>Tecnico: <strong>${technician}</strong></p>`
+        : "";
+    const commentsInfo = comments
+        ? `<p>Comentarios: <em>${comments}</em></p>`
         : "";
     const photoHTML = photos
         .map(
@@ -47,6 +51,7 @@ export async function sendMailWithPhotos(
             <h2>Nuevo registro de ${stageLabel.toLowerCase()}</h2>
             <p>Orden: <strong>${repairNumber}</strong></p>
             ${technicianInfo}
+            ${commentsInfo}
             <p>Total de imagenes: <strong>${imageCount}</strong></p>
             <hr style="border: 1px solid #eee; margin: 16px 0;" />
             ${photoHTML}

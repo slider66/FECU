@@ -22,6 +22,10 @@ export const metadata: Metadata = {
     title: "Control de Reparaciones",
     description:
         "Registro fotografico de ingreso y salida de equipos con evidencia visual en la nube.",
+    icons: {
+        icon: "/favicon.ico",
+        shortcut: "/favicon.ico",
+    },
 };
 
 export default function RootLayout({

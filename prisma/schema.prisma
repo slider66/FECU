@@ -30,6 +30,7 @@ model Photo {
   fileSize     Int?
   mimeType     String?
   technician   String?
+  comments     String?
 
   @@map("photos")
 }

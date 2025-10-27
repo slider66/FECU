@@ -13,6 +13,7 @@ CREATE TABLE "public"."photos" (
     "fileSize" INTEGER,
     "mimeType" TEXT,
     "technician" TEXT,
+    "comments" TEXT,
 
     CONSTRAINT "photos_pkey" PRIMARY KEY ("id")
 );

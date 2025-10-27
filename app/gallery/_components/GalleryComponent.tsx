@@ -109,6 +109,11 @@ export async function GalleryComponent() {
                                             </span>
                                         )}
                                     </div>
+                                    {photo.comments && (
+                                        <p className="text-[10px] opacity-80 line-clamp-2">
+                                            {photo.comments}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         );

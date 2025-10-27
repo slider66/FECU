@@ -1,104 +1,112 @@
-# Control de Reparaciones
+# FECU · Control de reparaciones
 
-Aplicacion web construida con Next.js para documentar el estado de los equipos que ingresan y egresan del servicio tecnico. Permite capturar fotos con la camara del movil o importar desde la galeria, almacenarlas en Supabase Storage y consultarlas mas tarde por numero de reparacion.
+Aplicacion interna para documentar el estado visual de equipos cuando ingresan y salen del servicio tecnico. El sistema organiza evidencias por numero de reparacion, permite capturar fotos desde camara o galeria y facilita la consulta posterior tanto para tecnicos como para clientes.
 
-## Caracteristicas
+## Caracteristicas clave
 
-- Registro de ingreso y salida por numero de reparacion.
-- Captura directa desde camara (`capture="environment"`) o seleccion desde la galeria.
-- Validacion de peso, formato y cantidad maxima de imagenes (12 por envio).
-- Almacenamiento automatico en Supabase Storage (`repair-photos`) y metadatos en PostgreSQL via Prisma.
-- Busqueda publica por numero de reparacion con agrupacion de fotos por etapa (ingreso/salida).
-- Galeria general con las ultimas evidencias subidas.
-- Notificacion opcional por correo via Nodemailer (Gmail) con miniaturas de las imagenes.
+- Registro unico de ingreso (`ENTRY`) o salida (`EXIT`) para cada numero de reparacion.
+- Carga simultanea de hasta 12 imagenes (8 MB max) con validacion de tipo y tamano mediante Zod.
+- Captura mobile friendly (`capture="environment"`) y feedback inmediato con sonner.
+- Campo para identificar al tecnico y dejar comentarios/observaciones por cada carga.
+- Almacenamiento en Supabase Storage (bucket `repair-photos`) y persistencia de metadatos via Prisma + Prisma Accelerate (PostgreSQL administrado).
+- Consulta publica por orden en `/orden` agrupando evidencia de ingreso y salida.
+- Galeria general `/gallery` con las ultimas cargas para monitoreo interno.
+- Notificacion opcional via Nodemailer (Gmail) con miniaturas incrustadas.
 
-## Stack Tecnico
+## Stack tecnico
 
-- **Framework**: Next.js 15 (App Router)
-- **Lenguaje**: TypeScript
-- **Estilos**: Tailwind CSS 4
-- **Base de datos**: PostgreSQL (Supabase)
-- **ORM**: Prisma
-- **Storage**: Supabase Storage (`repair-photos`)
-- **Formularios**: React Hook Form + Zod
-- **UI**: Componentes personalizados con Radix UI + Tailwind
-- **Iconos**: Lucide
-- **Email** (opcional): Nodemailer (Gmail)
-- **Analitica**: Vercel Analytics
+- **Framework**: Next.js 15 (App Router, Turbopack).
+- **Lenguaje**: TypeScript + React 19.
+- **Estilos**: Tailwind CSS 4 y componentes propios (`components/ds`).
+- **Formularios**: React Hook Form, Zod, Sonner.
+- **Iconos y UI**: Lucide, componentes reutilizables en `components/ui`.
+- **Persistencia**: Prisma ORM 6 con Prisma Accelerate (PostgreSQL gestionado por Prisma).
+- **Storage**: Supabase Storage (bucket publico `repair-photos`).
+- **Correo**: Nodemailer (Gmail) opcion para alertas internas.
 
-## Requisitos Previos
+## Estructura del proyecto
 
-- Node.js v20 o superior
-- npm o yarn
-- Cuenta de Supabase con una base de datos PostgreSQL
-- Bucket de almacenamiento publico llamado `repair-photos` en Supabase Storage
-- (Opcional) Cuenta de Gmail con app password para los correos de alerta
-
-## Puesta en Marcha
-
-1. **Clonar el repositorio**
-   ```bash
-   git clone <repository-url>
-   cd FECU
-   ```
-
-2. **Instalar dependencias**
-   ```bash
-   pnpm install
-   ```
-
-3. **Configurar variables de entorno**
-
-   Crear un archivo `.env` en la raiz del proyecto:
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase
-   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=tu_public_key
-   SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
-
-   DATABASE_URL=prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfaWQiOjEsInNlY3VyZV9rZXkiOiJza19zNU5ERVNYTXo1cnJJTHRLUDRQbjAiLCJhcGlfa2V5IjoiMDFLOEpURzRDTUtENjRBQjkxVkZCNEFYQVkiLCJ0ZW5hbnRfaWQiOiI4YzkzZGZiZThhYjJiYjQyMjNhMTgxYjA4YTlkNTBmNmNiODNmYzM2ZGU3NWRmMTBkNzMzZTYyOWZkMjdkYzQzIiwiaW50ZXJuYWxfc2VjcmV0IjoiMzk0ZTdhOTktMzg4NS00OTU4LWEwNWYtMmZkZjM5MjAyMWE1In0.XO4v-h3vCp0HAXlxmMGAzt5rgJ7TnLMoTnd-V4P7pLg
-   DIRECT_URL=postgres://8c93dfbe8ab2bb4223a181b08a9d50f6cb83fc36de75df10d733e629fd27dc43:sk_s5NDESXMz5rrILtKP4Pn0@db.prisma.io:5432/postgres?sslmode=require
-
-   GOOGLE_EMAIL=tu_correo@gmail.com        # Opcional (alertas por mail)
-   GOOGLE_APP_PASSWORD=tu_app_password     # Opcional
-   ```
-
-4. **Preparar Prisma**
-   ```bash
-   pnpm exec prisma generate
-   pnpm exec prisma db push
-   ```
-
-5. **Iniciar el entorno de desarrollo**
-   ```bash
-   pnpm dev
-   ```
-
-   Abre [http://localhost:3000](http://localhost:3000) para ver la aplicacion.
-
-## Flujo de Uso
-
-1. Desde la pagina principal ingresa el numero de reparacion y elige si registrar ingreso o salida.
-2. Toma fotos con la camara o selecciona desde la galeria. Puedes subir hasta 12 imagenes por envio (8 MB maximo cada una).
-3. Las fotos quedan alojadas en Supabase Storage y registradas en la base de datos con la etapa correspondiente.
-4. Consulta el historial desde la pagina **/orden** introduciendo el mismo numero de reparacion. Las imagenes aparecen agrupadas por ingreso y salida.
-5. Usa la galeria general para revisar rapidamente las ultimas evidencias cargadas por el equipo tecnico.
-
-## Scripts Disponibles
-
-```bash
-pnpm dev       # Servidor de desarrollo con Turbopack
-pnpm build     # Compilacion para produccion
-pnpm start     # Servidor de produccion
-pnpm lint      # Analisis con ESLint
+```
+FECU/
+├─ app/                     # Rutas Next.js (App Router)
+│  ├─ page.tsx              # Landing + accesos rapidos a ingreso/salida
+│  ├─ upload/               # Formulario principal de captura
+│  ├─ orden/                # Consulta por numero de reparacion
+│  └─ gallery/              # Galeria general
+├─ components/              # Design system, wrappers de layout y UI
+├─ lib/                     # Prisma, transporte de correo, utilidades
+├─ prisma/                  # schema.prisma y migraciones
+├─ public/                  # Assets estaticos
+├─ utils/                   # Clientes auxiliares (Supabase, etc.)
+└─ README.md
 ```
 
-## Notas de Implementacion
+## Flujo principal
 
-- El bucket de Supabase debe ser publico y llamarse `repair-photos`. Si cambias el nombre, actualiza la constante en `app/api/photos/route.ts` y `next.config.ts`.
-- El esquema de Prisma define el enum `RepairStage` con valores `ENTRY` y `EXIT`. Asegurate de ejecutar `pnpm exec prisma generate` despues de modificar el esquema.
-- Para habilitar los correos, completa `GOOGLE_EMAIL` y `GOOGLE_APP_PASSWORD`. Si no esten definidos, el envio se omite silenciosamente.
-- Los textos se encuentran en español neutro sin acentos para mantener compatibilidad ASCII.
-- Los botones de captura usan `capture="environment"` para sugerir la camara trasera en dispositivos moviles compatibles.
+1. Desde la pagina inicial se ingresa el numero de reparacion y se elige registrar ingreso o salida.
+2. En `/upload` se capturan o seleccionan imagenes, indicando etapa, tecnico y comentarios relevantes.
+3. El backend sube los archivos a Supabase Storage, guarda metadatos en PostgreSQL y revalida las vistas.
+4. Tecnicos y clientes consultan en `/orden?repairNumber=XXXX` o revisan la galeria `/gallery`.
+
+## Requisitos previos
+
+- Node.js v20 o superior.
+- pnpm instalado globalmente (`npm install -g pnpm` si es necesario).
+- Proyecto Supabase con bucket publico `repair-photos` (solo para almacenamiento de imagenes).
+- Cuenta Gmail con app password (opcional) si se desean alertas por correo.
+
+## Configuracion inicial
+
+```bash
+git clone https://github.com/slider66/fecu.git
+cd FECU
+pnpm install
+```
+
+Duplicar `.env.example` como `.env` y completar:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+
+DATABASE_URL=prisma+postgres://accelerate.prisma-data.net/?api_key=...
+DIRECT_URL=postgres://...@db.prisma.io:5432/postgres?sslmode=require
+
+GOOGLE_EMAIL=...            # opcional
+GOOGLE_APP_PASSWORD=...     # opcional
+```
+
+Sincronizar el esquema:
+
+```bash
+pnpm exec prisma generate
+pnpm exec prisma db push
+```
+
+Iniciar el servidor de desarrollo:
+
+```bash
+pnpm dev
+# Navega a http://localhost:3000
+```
+
+## Comandos utiles
+
+```bash
+pnpm dev                  # Servidor de desarrollo (Turbopack)
+pnpm build                # Compilacion para produccion
+pnpm start                # Servidor en modo produccion
+pnpm lint                 # Analisis con ESLint
+pnpm exec prisma studio   # Explorar registros con Prisma Studio
+```
+
+## Notas y recomendaciones
+
+- Prisma apunta a Prisma Accelerate. Si prefieres usar Postgres de Supabase, reemplaza `DATABASE_URL` y `DIRECT_URL` por la cadena de Supabase y vuelve a ejecutar `pnpm exec prisma db push`.
+- El bucket `repair-photos` debe ser publico; si cambias el nombre, actualiza `next.config.ts` y `app/api/photos/route.ts`.
+- Las notificaciones via correo solo se envian cuando `GOOGLE_EMAIL` y `GOOGLE_APP_PASSWORD` estan definidos.
+- Se mantiene texto en ASCII simple para evitar problemas de encoding en dispositivos o CLI.
 
 ## Licencia
 

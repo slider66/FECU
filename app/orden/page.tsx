@@ -216,25 +216,30 @@ function StageGallery({
             <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {photos.map((photo) => (
-                        <figure
-                            key={photo.id}
-                            className="relative aspect-square overflow-hidden rounded-lg bg-muted">
-                            <Image
-                                src={photo.path}
-                                alt={photo.filename}
-                                fill
-                                sizes="(min-width: 1024px) 320px, 100vw"
-                                className="object-cover"
-                            />
-                            <figcaption className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-xs px-2 py-1 flex justify-between">
-                                <span className="truncate">
-                                    {photo.filename}
-                                </span>
-                                <time dateTime={photo.createdAt.toISOString()}>
-                                    {photo.createdAt.toLocaleDateString()}
-                                </time>
-                            </figcaption>
-                        </figure>
+                        <div key={photo.id} className="space-y-2">
+                            <figure className="relative aspect-square overflow-hidden rounded-lg bg-muted">
+                                <Image
+                                    src={photo.path}
+                                    alt={photo.filename}
+                                    fill
+                                    sizes="(min-width: 1024px) 320px, 100vw"
+                                    className="object-cover"
+                                />
+                                <figcaption className="absolute bottom-0 left-0 right-0 bg-black/60 text-white text-xs px-2 py-1 flex justify-between">
+                                    <span className="truncate">
+                                        {photo.filename}
+                                    </span>
+                                    <time dateTime={photo.createdAt.toISOString()}>
+                                        {photo.createdAt.toLocaleDateString()}
+                                    </time>
+                                </figcaption>
+                            </figure>
+                            {photo.comments && (
+                                <p className="text-xs text-muted-foreground line-clamp-3">
+                                    {photo.comments}
+                                </p>
+                            )}
+                        </div>
                     ))}
                 </div>
             </CardContent>

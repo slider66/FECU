@@ -15,6 +15,8 @@ export async function POST(req: NextRequest) {
             .toUpperCase();
         const technician =
             (formData.get("technician") as string | null)?.trim() || null;
+        const comments =
+            (formData.get("comments") as string | null)?.trim() || null;
         const images = formData.getAll("images") as File[];
 
         if (!repairNumber) {
@@ -78,6 +80,7 @@ export async function POST(req: NextRequest) {
                     repairNumber,
                     stage,
                     technician,
+                    comments,
                     bucketPath: data.path,
                     fileSize: image.size,
                     mimeType: image.type,
@@ -100,7 +103,8 @@ export async function POST(req: NextRequest) {
                 stage,
                 uploadedPhotos.length,
                 uploadedPhotos,
-                technician
+                technician,
+                comments
             );
         } catch (error) {
             console.error("Error sending email:", error);
@@ -112,6 +116,7 @@ export async function POST(req: NextRequest) {
                 repairNumber,
                 stage,
                 technician,
+                comments,
                 imageCount: uploadedPhotos.length,
                 photos: uploadedPhotos,
             },
