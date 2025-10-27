@@ -1,39 +1,36 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
+import { supabaseAdmin } from "@/utils/supabase/admin";
 import Image from "next/image";
 import { revalidatePath } from "next/cache";
-import { supabaseAdmin } from "@/utils/supabase/admin";
-import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 
-// Delete photo function
 async function deletePhoto(formData: FormData) {
     "use server";
 
     const photoId = formData.get("id") as string;
 
-    // Find photo
     const photo = await prisma.photo.findUnique({
         where: { id: photoId },
     });
 
     if (!photo) return;
 
-    // Delete from Storage
     await supabaseAdmin.storage
-        .from("wedding-photos")
+        .from("repair-photos")
         .remove([photo.bucketPath]);
 
-    // Delete from database
     await prisma.photo.delete({
         where: { id: photoId },
     });
 
-    revalidatePath("/gallery"); // Revalidate path when deleting a photo
+    revalidatePath("/gallery");
+    revalidatePath("/orden");
 }
 
 export async function GalleryComponent() {
-    const enableDelete = false; // Set to true to enable delete functionality
+    const enableDelete = false;
 
     const data = await prisma.photo.findMany({
         orderBy: {
@@ -41,27 +38,35 @@ export async function GalleryComponent() {
         },
     });
 
+    if (data.length === 0) {
+        return (
+            <Card>
+                <CardContent>
+                    <div className="flex flex-col items-center justify-center py-12 text-center gap-2">
+                        <p className="text-muted-foreground text-lg">
+                            Todavia no hay fotos para mostrar.
+                        </p>
+                        <p className="text-muted-foreground text-sm">
+                            Sube la primera evidencia desde la pagina principal.
+                        </p>
+                    </div>
+                </CardContent>
+            </Card>
+        );
+    }
+
     return (
         <Card>
             <CardContent>
-                {data.length === 0 ? (
-                    //  if no data, show this:
-                    <div className="flex flex-col items-center justify-center py-12 text-center gap-2">
-                        <p className="text-muted-foreground text-lg">
-                            Der er ingen billeder at vise
-                        </p>
-                        <p className="text-muted-foreground text-sm">
-                            Upload det første billede for at komme i gang
-                        </p>
-                    </div>
-                ) : (
-                    //  if data, show this:
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {data.map((photo) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {data.map((photo) => {
+                        const stageLabel =
+                            photo.stage === "ENTRY" ? "Ingreso" : "Salida";
+                        const timestamp = photo.createdAt.toLocaleString();
+                        return (
                             <div
                                 key={photo.id}
-                                className="relative aspect-square rounded-lg overflow-hidden ">
-                                {/* Delete button */}
+                                className="relative aspect-square rounded-lg overflow-hidden bg-muted">
                                 {enableDelete && (
                                     <form
                                         action={deletePhoto}
@@ -72,33 +77,43 @@ export async function GalleryComponent() {
                                             value={photo.id}
                                         />
                                         <Button
-                                            variant="outline"
+                                            variant="destructive"
                                             size="icon"
                                             type="submit">
                                             <Trash2 className="w-4 h-4" />
                                         </Button>
                                     </form>
                                 )}
-
-                                {/* Image */}
                                 <Image
-                                    key={photo.id}
                                     src={photo.path}
                                     alt={photo.filename}
-                                    className="object-cover"
                                     fill
+                                    className="object-cover"
                                 />
-
-                                {/* Uploaded by */}
-                                <div className="absolute bottom-2 left-2 right-2 px-3 py-1 bg-accent/70 text-accent-foreground text-sm rounded-lg font-mono">
-                                    <span className="block break-words line-clamp-2 font-bold">
-                                        {photo.uploadedBy}
-                                    </span>
+                                <div className="absolute inset-x-0 bottom-0 px-3 py-2 bg-black/60 text-white text-xs leading-tight space-y-1">
+                                    <div className="flex items-center justify-between gap-2">
+                                        <span className="font-semibold uppercase tracking-wide">
+                                            {stageLabel}
+                                        </span>
+                                        <span className="text-[10px]">
+                                            {timestamp}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-2">
+                                        <span className="truncate">
+                                            #{photo.repairNumber}
+                                        </span>
+                                        {photo.technician && (
+                                            <span className="truncate text-[10px] opacity-80">
+                                                {photo.technician}
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                )}
+                        );
+                    })}
+                </div>
             </CardContent>
         </Card>
     );

@@ -4,7 +4,6 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,17 +13,23 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-        
+
+enum RepairStage {
+  ENTRY
+  EXIT
+}
 
 model Photo {
-  id         String   @id @default(cuid())
-  filename   String   // Original filename fra bruger
-  path       String   // Public URL til billede
-  createdAt  DateTime @default(now())
-  uploadedBy String  // Navn eller identifier for uploader
-  bucketPath String   @unique // Storage path i Supabase
-  fileSize   Int?     // Bytes - nyttig til at overvåge storage
-  mimeType   String?  // image/jpeg, image/png - god til validation
-  
+  id           String      @id @default(cuid())
+  filename     String
+  path         String
+  createdAt    DateTime    @default(now())
+  repairNumber String
+  stage        RepairStage
+  bucketPath   String      @unique
+  fileSize     Int?
+  mimeType     String?
+  technician   String?
+
   @@map("photos")
 }

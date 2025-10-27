@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { Photo } from "@prisma/client";
+import { Photo, RepairStage } from "@prisma/client";
 
 export const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -10,17 +10,30 @@ export const transporter = nodemailer.createTransport({
 });
 
 export async function sendMailWithPhotos(
-    name: string,
+    repairNumber: string,
+    stage: RepairStage,
     imageCount: number,
-    photos: Photo[]
+    photos: Photo[],
+    technician?: string | null
 ) {
+    if (!process.env.GOOGLE_EMAIL || !process.env.GOOGLE_APP_PASSWORD) {
+        return;
+    }
+
+    const stageLabel = stage === "ENTRY" ? "Ingreso" : "Salida";
+    const technicianInfo = technician
+        ? `<p>Tecnico: <strong>${technician}</strong></p>`
+        : "";
     const photoHTML = photos
         .map(
             (photo) => `
-            <div style="margin-bottom: 20px;">
-                <img src="${photo.path}" 
-                     alt="${photo.filename}" 
-                     style="max-width: 250px; border-radius: 8px;" />
+            <div style="margin-bottom: 16px;">
+                <img src="${photo.path}"
+                     alt="${photo.filename}"
+                     style="max-width: 240px; border-radius: 8px;" />
+                <p style="font-size: 12px; color: #555; margin-top: 4px;">
+                    Archivo: ${photo.filename}
+                </p>
             </div>
         `
         )
@@ -29,17 +42,17 @@ export async function sendMailWithPhotos(
     const mailOptions = {
         from: process.env.GOOGLE_EMAIL,
         to: process.env.GOOGLE_EMAIL,
-        subject: `📸 ${name} har uploadet ${imageCount} billeder!`,
+        subject: `Orden ${repairNumber} - ${stageLabel} (${imageCount} fotos)`,
         html: `
-            <h2>Nye bryllupsbillede(r)! 🎉</h2>
-            <p><strong>${name}</strong> har uploadet ${imageCount} billeder!</p>
-                    <hr style="border: 1px solid #eee; margin: 20px 0;" />
-                    
-                        ${photoHTML}
-    
-                                    <hr style="border: 1px solid #eee; margin: 20px 0;" />
-    
-             `,
+            <h2>Nuevo registro de ${stageLabel.toLowerCase()}</h2>
+            <p>Orden: <strong>${repairNumber}</strong></p>
+            ${technicianInfo}
+            <p>Total de imagenes: <strong>${imageCount}</strong></p>
+            <hr style="border: 1px solid #eee; margin: 16px 0;" />
+            ${photoHTML}
+            <hr style="border: 1px solid #eee; margin: 16px 0;" />
+        `,
     };
+
     await transporter.sendMail(mailOptions);
 }

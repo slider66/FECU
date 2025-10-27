@@ -1,116 +1,105 @@
-# QR Wedding Snap 💒📸
+# Control de Reparaciones
 
-A modern wedding photo-sharing application built with Next.js that makes it easy for guests to upload and share photos from the wedding.
+Aplicacion web construida con Next.js para documentar el estado de los equipos que ingresan y egresan del servicio tecnico. Permite capturar fotos con la camara del movil o importar desde la galeria, almacenarlas en Supabase Storage y consultarlas mas tarde por numero de reparacion.
 
-## 🎯 Features
+## Caracteristicas
 
-- **Photo Upload**: Guests can easily upload their photos from the wedding
-- **Gallery**: Private gallery to view all uploaded photos
-- **Validation**: Maximum 10 photos per upload with Zod validation
-- **Real-time Updates**: Photos appear immediately after upload
-- **Responsive Design**: Works on all devices
-- **Secure Storage**: Photos are securely stored in Supabase Storage
-- **Database**: PostgreSQL with Prisma ORM for metadata management
+- Registro de ingreso y salida por numero de reparacion.
+- Captura directa desde camara (`capture="environment"`) o seleccion desde la galeria.
+- Validacion de peso, formato y cantidad maxima de imagenes (12 por envio).
+- Almacenamiento automatico en Supabase Storage (`repair-photos`) y metadatos en PostgreSQL via Prisma.
+- Busqueda publica por numero de reparacion con agrupacion de fotos por etapa (ingreso/salida).
+- Galeria general con las ultimas evidencias subidas.
+- Notificacion opcional por correo via Nodemailer (Gmail) con miniaturas de las imagenes.
 
-## 🛠️ Tech Stack
+## Stack Tecnico
 
-- **Framework**: Next.js 15.5.4 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS 4
-- **Database**: PostgreSQL (Supabase)
+- **Framework**: Next.js 15 (App Router)
+- **Lenguaje**: TypeScript
+- **Estilos**: Tailwind CSS 4
+- **Base de datos**: PostgreSQL (Supabase)
 - **ORM**: Prisma
-- **Storage**: Supabase Storage
-- **Form Handling**: React Hook Form + Zod
-- **UI Components**: Radix UI
-- **Icons**: Lucide React
-- **Analytics**: Vercel Analytics
+- **Storage**: Supabase Storage (`repair-photos`)
+- **Formularios**: React Hook Form + Zod
+- **UI**: Componentes personalizados con Radix UI + Tailwind
+- **Iconos**: Lucide
+- **Email** (opcional): Nodemailer (Gmail)
+- **Analitica**: Vercel Analytics
 
-## 📋 Prerequisites
+## Requisitos Previos
 
-- Node.js (v20 or newer)
-- npm or yarn
-- Supabase account
-- PostgreSQL database
+- Node.js v20 o superior
+- npm o yarn
+- Cuenta de Supabase con una base de datos PostgreSQL
+- Bucket de almacenamiento publico llamado `repair-photos` en Supabase Storage
+- (Opcional) Cuenta de Gmail con app password para los correos de alerta
 
-## 🚀 Installation
+## Puesta en Marcha
 
-1. **Clone the repository**
+1. **Clonar el repositorio**
    ```bash
    git clone <repository-url>
-   cd qr-wedding-snap
+   cd FECU
    ```
 
-2. **Install dependencies**
+2. **Instalar dependencias**
    ```bash
-   npm install
+   pnpm install
    ```
 
-3. **Set up environment variables**
+3. **Configurar variables de entorno**
 
-   Create a `.env` file in the root of the project:
+   Crear un archivo `.env` en la raiz del proyecto:
    ```env
-   # Supabase
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your_publishable_key
-   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=tu_public_key
+   SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key
 
-   # Database
-   DATABASE_URL=your_database_url
-   DIRECT_URL=your_direct_database_url
+   DATABASE_URL=prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RfaWQiOjEsInNlY3VyZV9rZXkiOiJza19zNU5ERVNYTXo1cnJJTHRLUDRQbjAiLCJhcGlfa2V5IjoiMDFLOEpURzRDTUtENjRBQjkxVkZCNEFYQVkiLCJ0ZW5hbnRfaWQiOiI4YzkzZGZiZThhYjJiYjQyMjNhMTgxYjA4YTlkNTBmNmNiODNmYzM2ZGU3NWRmMTBkNzMzZTYyOWZkMjdkYzQzIiwiaW50ZXJuYWxfc2VjcmV0IjoiMzk0ZTdhOTktMzg4NS00OTU4LWEwNWYtMmZkZjM5MjAyMWE1In0.XO4v-h3vCp0HAXlxmMGAzt5rgJ7TnLMoTnd-V4P7pLg
+   DIRECT_URL=postgres://8c93dfbe8ab2bb4223a181b08a9d50f6cb83fc36de75df10d733e629fd27dc43:sk_s5NDESXMz5rrILtKP4Pn0@db.prisma.io:5432/postgres?sslmode=require
 
-   # Email (optional)
-   GOOGLE_EMAIL=your_email
-   GOOGLE_APP_PASSWORD=your_app_password
+   GOOGLE_EMAIL=tu_correo@gmail.com        # Opcional (alertas por mail)
+   GOOGLE_APP_PASSWORD=tu_app_password     # Opcional
    ```
 
-4. **Set up the database**
+4. **Preparar Prisma**
    ```bash
-   npx prisma generate
-   npx prisma db push
+   pnpm exec prisma generate
+   pnpm exec prisma db push
    ```
 
-5. **Run the development server**
+5. **Iniciar el entorno de desarrollo**
    ```bash
-   npm run dev
+   pnpm dev
    ```
 
-   Open [http://localhost:3000](http://localhost:3000) in your browser
+   Abre [http://localhost:3000](http://localhost:3000) para ver la aplicacion.
 
-## 🎨 Feature Details
+## Flujo de Uso
 
-### Upload System
-- Maximum 10 photos per upload
-- Validation with Zod schema
-- Automatic optimization and compression
-- Real-time feedback during upload
-- Error handling
+1. Desde la pagina principal ingresa el numero de reparacion y elige si registrar ingreso o salida.
+2. Toma fotos con la camara o selecciona desde la galeria. Puedes subir hasta 12 imagenes por envio (8 MB maximo cada una).
+3. Las fotos quedan alojadas en Supabase Storage y registradas en la base de datos con la etapa correspondiente.
+4. Consulta el historial desde la pagina **/orden** introduciendo el mismo numero de reparacion. Las imagenes aparecen agrupadas por ingreso y salida.
+5. Usa la galeria general para revisar rapidamente las ultimas evidencias cargadas por el equipo tecnico.
 
-### Gallery
-- Responsive grid layout
-- Lazy loading of images
-- Loading states
-- Optimized with Next.js Image
-
-## 📜 Scripts
+## Scripts Disponibles
 
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm start            # Start production server
-npm run lint         # Run ESLint
+pnpm dev       # Servidor de desarrollo con Turbopack
+pnpm build     # Compilacion para produccion
+pnpm start     # Servidor de produccion
+pnpm lint      # Analisis con ESLint
 ```
 
-## 🔒 Security
+## Notas de Implementacion
 
-- Environment variables for sensitive data
-- Service role key for server-side operations
-- Input validation with Zod
-- Secure file upload to Supabase Storage
+- El bucket de Supabase debe ser publico y llamarse `repair-photos`. Si cambias el nombre, actualiza la constante en `app/api/photos/route.ts` y `next.config.ts`.
+- El esquema de Prisma define el enum `RepairStage` con valores `ENTRY` y `EXIT`. Asegurate de ejecutar `pnpm exec prisma generate` despues de modificar el esquema.
+- Para habilitar los correos, completa `GOOGLE_EMAIL` y `GOOGLE_APP_PASSWORD`. Si no esten definidos, el envio se omite silenciosamente.
+- Los textos se encuentran en español neutro sin acentos para mantener compatibilidad ASCII.
+- Los botones de captura usan `capture="environment"` para sugerir la camara trasera en dispositivos moviles compatibles.
 
-## 📝 License
+## Licencia
 
-MIT License - Open Source
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
+MIT

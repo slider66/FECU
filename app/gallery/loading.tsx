@@ -1,10 +1,10 @@
-import { Container, Section } from "@/components/ds";
+import { Container } from "@/components/ds";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function GalleryLoading() {
     return (
-        <Container className="max-w-3xl">
+        <Container className="max-w-5xl">
             <Card>
                 <CardContent>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

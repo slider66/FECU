@@ -19,8 +19,9 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-    title: "Renas & Ayse's Bryllup",
-    description: "Renas & Ayse's Bryllup - Renas og Ayse",
+    title: "Control de Reparaciones",
+    description:
+        "Registro fotografico de ingreso y salida de equipos con evidencia visual en la nube.",
 };
 
 export default function RootLayout({
