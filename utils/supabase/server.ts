@@ -1,6 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
+/**
+ * Crea un cliente de Supabase enlazado con el almacén de cookies del request actual.
+ * Ideal para Server Actions o Route Handlers que necesitan hidratar sesiones existentes.
+ */
 export async function createClient() {
     const cookieStore = await cookies();
 

@@ -91,6 +91,8 @@ pnpm dev
 # Navega a http://localhost:3000
 ```
 
+Para una guia paso a paso que incluye requisitos previos, instalacion de dependencias y verificaciones finales consulta `docs/SETUP.md`. Para escenarios de despliegue en distintos entornos revisa `docs/DEPLOYMENT.md`.
+
 ## Comandos utiles
 
 ```bash
@@ -99,6 +101,8 @@ pnpm build                # Compilacion para produccion
 pnpm start                # Servidor en modo produccion
 pnpm lint                 # Analisis con ESLint
 pnpm exec prisma studio   # Explorar registros con Prisma Studio
+pnpm dlx tsx scripts/migrate.ts  # Ejecutar migraciones en cadena
+pnpm dlx tsx scripts/deploy.ts   # Instalar deps, migrar y generar build para despliegue
 ```
 
 ## Notas y recomendaciones

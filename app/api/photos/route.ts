@@ -6,6 +6,17 @@ import { sendMailWithPhotos } from "@/lib/transport_nodemailer";
 
 const STAGES = ["ENTRY", "EXIT"] as const;
 
+/**
+ * Persists new evidence photos for a repair order.
+ *
+ * Accepts `multipart/form-data` with the repair metadata and an array of images.
+ * Uploads each file to Supabase Storage, stores the metadata in PostgreSQL via Prisma,
+ * triggers ISR revalidation for the gallery/order pages, and optionally sends an email.
+ *
+ * @param req - Next.js request containing a `FormData` payload.
+ * @returns JSON response with a summary of the saved photos or an error payload.
+ */
+
 export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();

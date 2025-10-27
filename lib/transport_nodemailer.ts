@@ -9,6 +9,16 @@ export const transporter = nodemailer.createTransport({
     },
 });
 
+/**
+ * Sends an internal notification email including metadata and thumbnails for a repair order.
+ *
+ * @param repairNumber - External identifier for the repair order.
+ * @param stage - Workflow stage (`ENTRY` or `EXIT`) associated with the upload.
+ * @param imageCount - Total number of photos uploaded in the request.
+ * @param photos - Persisted `Photo` records used to render thumbnails and metadata.
+ * @param technician - Optional technician name responsible for the upload.
+ * @param comments - Optional notes entered alongside the upload.
+ */
 export async function sendMailWithPhotos(
     repairNumber: string,
     stage: RepairStage,
