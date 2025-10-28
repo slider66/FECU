@@ -48,11 +48,7 @@ const FormSchema = z.object({
         .regex(/^[a-zA-Z0-9-_.]+$/, {
             message: "Solo letras, numeros, guiones y puntos.",
         }),
-    stage: z.enum(["ENTRY", "EXIT"], {
-        errorMap: () => ({
-            message: "Selecciona ingreso o salida.",
-        }),
-    }),
+    stage: z.enum(["ENTRY", "EXIT"], "Selecciona ingreso o salida."),
     technician: z
         .string()
         .trim()
