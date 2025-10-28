@@ -5,6 +5,7 @@ import { supabaseAdmin } from "@/utils/supabase/admin";
 import Image from "next/image";
 import { revalidatePath } from "next/cache";
 import { Trash2 } from "lucide-react";
+import type { Photo } from "@prisma/client";
 
 async function deletePhoto(formData: FormData) {
     "use server";
@@ -32,7 +33,7 @@ async function deletePhoto(formData: FormData) {
 export async function GalleryComponent() {
     const enableDelete = false;
 
-    const data = await prisma.photo.findMany({
+    const data: Photo[] = await prisma.photo.findMany({
         orderBy: {
             createdAt: "desc",
         },
