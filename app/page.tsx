@@ -32,8 +32,8 @@ export default function Home() {
                             </CardTitle>
                             <CardDescription>
                                 Documenta el estado de cada equipo al ingresar y
-                                al egresar del taller. Captura las fotos con la
-                                camara del celular o carga imagenes desde la
+                                al regresar del taller. Captura las fotos con la
+                                camara del telefono o carga imagenes desde la
                                 galeria.
                             </CardDescription>
                         </CardHeader>
