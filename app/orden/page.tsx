@@ -45,8 +45,14 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
           })
         : [];
 
-    const entryPhotos = photos.filter((photo) => photo.stage === "ENTRY");
-    const exitPhotos = photos.filter((photo) => photo.stage === "EXIT");
+    type OrderPhoto = Awaited<typeof photos>[number];
+
+    const entryPhotos = photos.filter(
+        (photo: OrderPhoto) => photo.stage === "ENTRY"
+    );
+    const exitPhotos = photos.filter(
+        (photo: OrderPhoto) => photo.stage === "EXIT"
+    );
 
     return (
         <Section>
