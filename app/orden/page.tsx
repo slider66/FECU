@@ -191,6 +191,8 @@ type StageGalleryProps = {
     emptyMessage: string;
 };
 
+type StageGalleryPhoto = StageGalleryProps["photos"][number];
+
 function StageGallery({
     title,
     description,
@@ -221,7 +223,7 @@ function StageGallery({
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {photos.map((photo) => (
+                    {photos.map((photo: StageGalleryPhoto) => (
                         <div key={photo.id} className="space-y-2">
                             <figure className="relative aspect-square overflow-hidden rounded-lg bg-muted">
                                 <Image
