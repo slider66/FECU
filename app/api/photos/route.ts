@@ -55,20 +55,21 @@ export async function POST(req: NextRequest) {
         }
 
         const stage = stageRaw as (typeof STAGES)[number];
+        const stagePrefix = stage === "ENTRY" ? "entrada" : "salida";
+        const uploadTimestamp = Date.now();
 
-        const uploadPromises = images.map(async (image) => {
-            const fileExtension =
-                image.name.includes(".") && image.name.split(".").pop()
-                    ? image.name.split(".").pop()
-                    : "jpeg";
-            const fileName = `${repairNumber}-${stage}-${Date.now()}-${crypto.randomUUID()}.${
-                fileExtension ?? "jpeg"
-            }`;
+        const uploadPromises = images.map(async (image, index) => {
+            const positionSuffix =
+                images.length > 1
+                    ? `-${String(index + 1).padStart(2, "0")}`
+                    : "";
+            const displayFileName = `${stagePrefix}-${repairNumber}${positionSuffix}.jpg`;
+            const storageFileName = `${stagePrefix}-${repairNumber}${positionSuffix}-${uploadTimestamp}-${crypto.randomUUID()}.jpg`;
             const arrayBuffer = await image.arrayBuffer();
 
             const { data, error } = await supabaseAdmin.storage
                 .from("repair-photos")
-                .upload(fileName, arrayBuffer, {
+                .upload(storageFileName, arrayBuffer, {
                     contentType: image.type,
                     upsert: false,
                 });
@@ -82,11 +83,11 @@ export async function POST(req: NextRequest) {
                 data: { publicUrl },
             } = supabaseAdmin.storage
                 .from("repair-photos")
-                .getPublicUrl(fileName);
+                .getPublicUrl(storageFileName);
 
             return prisma.photo.create({
                 data: {
-                    filename: image.name,
+                    filename: displayFileName,
                     path: publicUrl,
                     repairNumber,
                     stage,
