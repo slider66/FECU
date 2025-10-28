@@ -12,6 +12,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Container, Main, Section } from "@/components/ds";
 import { Camera, FolderSearch, Images, Plus } from "lucide-react";
+import { Roboto } from "next/font/google";
+
+const roboto = Roboto({
+    subsets: ["latin"],
+    weight: ["400", "700"],
+});
 
 export default function Home() {
     return (
@@ -20,7 +26,8 @@ export default function Home() {
                 <Container className="max-w-3xl space-y-6">
                     <Card>
                         <CardHeader className="text-center space-y-2">
-                            <CardTitle className="text-2xl font-serif">
+                            <CardTitle
+                                className={`${roboto.className} text-2xl font-semibold`}>
                                 Registro visual de reparaciones
                             </CardTitle>
                             <CardDescription>
