@@ -79,6 +79,34 @@ curl -X POST http://localhost:3000/api/photos \
   -F images[]=@./fixtures/back.jpg
 ```
 
+## Páginas de consulta
+
+Además del endpoint de carga, la aplicación expone dos páginas públicas que consumen los datos almacenados en PostgreSQL. Ambas se renderizan en el servidor y devuelven HTML, por lo que pueden enlazarse directamente con clientes o integrarse mediante un iframe firmado.
+
+### `GET /orden`
+
+Muestra el historial de fotos de una orden específica, separando ingreso (`ENTRY`) y salida (`EXIT`).
+
+#### Query params
+
+| Parámetro        | Tipo     | Requerido | Notas                                                                 |
+|------------------|----------|-----------|-----------------------------------------------------------------------|
+| `repairNumber`   | `string` | Sí        | Mismo formato que el formulario de carga (3-32 caracteres, letras/números/`-`/`_`/`.`). |
+
+#### Respuesta
+
+- Renderiza un formulario para ingresar el número de reparación y, cuando existe, dos galerías (Ingreso / Salida) ordenadas cronológicamente.
+- Cuando no hay registros muestra un aviso y un acceso directo para completar `/upload`.
+- Comparte enlaces permanentes, por ejemplo: `https://tudominio/orden?repairNumber=2458-2025`.
+
+### `GET /gallery`
+
+Lista todas las evidencias en orden cronológico inverso.
+
+- No requiere parámetros, solo lee la tabla `Photo` ordenada por `createdAt DESC`.
+- Cada tarjeta indica etapa (Ingreso/Salida), número de orden, técnico y comentarios si existen.
+- La ruta se revalida cada vez que se realiza una carga nueva o se elimina una foto desde el panel interno.
+
 ## Revalidación incremental
 
 Después de cada upload exitoso se ejecuta `revalidatePath` sobre `/gallery` y `/orden`, asegurando que la galería y la vista por orden reflejen los nuevos datos sin reiniciar el servidor.

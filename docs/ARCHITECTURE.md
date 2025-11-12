@@ -66,6 +66,77 @@ Usuario → Formulario `/upload`
 - `SUPABASE_SERVICE_ROLE_KEY` debe mantenerse fuera del front-end (solo en el servidor).
 - Recomendado montar el API detrás de autenticación si se requiere control de accesos.
 
+### Ejemplo de políticas para Supabase Storage
+
+1. Crea el bucket `repair-photos` marcado como público para lectura.
+2. Define políticas en `storage.objects` que limiten la escritura a un rol de servicio y expongan solo la lectura pública:
+
+```sql
+-- Lectura pública (solo bucket repair-photos)
+create policy "public-read-repair-photos"
+on storage.objects for select
+using (bucket_id = 'repair-photos');
+
+-- Inserción desde la API (role service o funciones)
+create policy "service-write-repair-photos"
+on storage.objects for insert
+with check (
+  bucket_id = 'repair-photos'
+  and auth.role() in ('service_role', 'authenticated')
+);
+
+-- Eliminación restringida
+create policy "service-delete-repair-photos"
+on storage.objects for delete
+using (
+  bucket_id = 'repair-photos'
+  and auth.role() = 'service_role'
+);
+```
+
+3. Configura CORS para permitir únicamente los dominios oficiales y métodos `GET`.
+
+### Rate limiting recomendado para `/api/photos`
+
+Aun cuando el endpoint no se expone públicamente, es buena práctica limitar los envíos por IP/orden. Un enfoque sencillo es usar `@upstash/ratelimit` en `middleware.ts`:
+
+```ts
+import { NextResponse } from "next/server";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(5, "1 m"), // 5 uploads por minuto
+  prefix: "fecu-api-photos"
+});
+
+export async function middleware(request: Request) {
+  if (request.nextUrl.pathname === "/api/photos") {
+    const ip = request.headers.get("x-forwarded-for") ?? "unknown";
+    const { success, limit, reset, remaining } = await ratelimit.limit(ip);
+
+    if (!success) {
+      return NextResponse.json(
+        { message: "Demasiadas cargas seguidas, intenta de nuevo en un minuto." },
+        {
+          status: 429,
+          headers: {
+            "X-RateLimit-Limit": String(limit),
+            "X-RateLimit-Remaining": String(remaining),
+            "X-RateLimit-Reset": String(reset)
+          }
+        }
+      );
+    }
+  }
+
+  return NextResponse.next();
+}
+```
+
+Adapta la ventana y el proveedor de almacenamiento (Upstash, Redis propio, KV) según la infraestructura. Para entornos sin middleware se puede envolver la lógica dentro del handler de `POST /api/photos`.
+
 ## Próximos pasos sugeridos
 
 - Añadir autenticación para restringir accesos a `/upload`.
