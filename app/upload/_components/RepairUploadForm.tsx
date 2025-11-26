@@ -264,7 +264,6 @@ export function RepairUploadForm({
                                                 type="file"
                                                 multiple
                                                 accept="image/*"
-                                                capture="environment"
                                                 className="hidden"
                                                 id="file-upload"
                                                 onBlur={onBlur}
