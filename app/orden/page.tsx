@@ -11,7 +11,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
+import { Upload, Home } from "lucide-react";
 
 export const metadata: Metadata = {
     title: "Álbum del Bautizo",
@@ -93,8 +93,14 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
                             />
                         )}
 
-                        <div className="flex items-center justify-center pt-4">
-                            <Button asChild variant="default" size="lg" className="rounded-full">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                            <Button asChild variant="outline" size="lg" className="rounded-full w-full sm:w-auto">
+                                <Link href="/">
+                                    <Home className="h-4 w-4 mr-2" />
+                                    Volver al Inicio
+                                </Link>
+                            </Button>
+                            <Button asChild variant="default" size="lg" className="rounded-full w-full sm:w-auto">
                                 <Link
                                     href={`/upload?repairNumber=${encodeURIComponent(
                                         repairNumber
