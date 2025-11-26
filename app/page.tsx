@@ -1,141 +1,81 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Container, Main, Section } from "@/components/ds";
-import { Camera, FolderSearch, Images, Plus } from "lucide-react";
-import { Roboto } from "next/font/google";
-
-const roboto = Roboto({
-    subsets: ["latin"],
-    weight: ["400", "700"],
-});
+import { Images, Plus } from "lucide-react";
 
 export default function Home() {
     return (
         <Main>
             <Section>
-                <Container className="max-w-3xl space-y-6">
-                    <Card>
-                        <CardHeader className="text-center space-y-2">
-                            <CardTitle
-                                className={`${roboto.className} text-2xl font-semibold`}>
-                                Registro visual de reparaciones
-                            </CardTitle>
-                            <CardDescription>
-                                Documenta el estado de cada equipo al ingresar y
-                                al regresar del taller. Captura las fotos con la
-                                camara del telefono o carga imagenes desde la
-                                galeria.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <form
-                                action="/upload"
-                                method="GET"
-                                className="space-y-4">
-                                <div className="space-y-2">
-                                    <Label
-                                        className="text-sm font-medium"
-                                        htmlFor="repairNumber">
-                                        Numero de reparacion
-                                    </Label>
-                                    <Input
-                                        id="repairNumber"
-                                        name="repairNumber"
-                                        required
-                                        placeholder="Ej. 2458-2025"
-                                        autoComplete="off"
-                                    />
-                                </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                    <Button
-                                        type="submit"
-                                        className="w-full"
-                                        formAction="/upload?stage=ENTRY">
-                                        <Plus className="h-4 w-4 mr-2" />
-                                        Registrar ingreso
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        className="w-full"
-                                        variant="outline"
-                                        formAction="/upload?stage=EXIT">
-                                        <Camera className="h-4 w-4 mr-2" />
-                                        Registrar salida
-                                    </Button>
-                                </div>
-                            </form>
-                        </CardContent>
-                        <CardFooter className="justify-center">
-                            <p className="text-sm text-muted-foreground text-center">
-                                Cada carga se guarda automaticamente en la nube
-                                con el numero de reparacion.
-                            </p>
-                        </CardFooter>
-                    </Card>
+                <Container className="max-w-3xl space-y-8 py-12">
+                    <div className="flex justify-center mb-8">
+                        <Image
+                            src="/bautizo-iago-29112025.png"
+                            alt="Bautizo de Iago - 29 de Noviembre de 2025"
+                            width={600}
+                            height={300}
+                            priority
+                            className="h-auto w-full max-w-lg object-contain"
+                        />
+                    </div>
 
-                    <Card>
-                        <CardHeader className="space-y-1">
-                            <CardTitle className="font-serif text-xl">
-                                Consultar historial
-                            </CardTitle>
-                            <CardDescription>
-                                Busca una orden para ver las fotos de ingreso y
-                                salida.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <form
-                                action="/orden"
-                                method="GET"
-                                className="space-y-3">
-                                <div className="space-y-2">
-                                    <Label
-                                        className="text-sm font-medium"
-                                        htmlFor="lookup-number">
-                                        Numero de reparacion
-                                    </Label>
-                                    <Input
-                                        id="lookup-number"
-                                        name="repairNumber"
-                                        required
-                                        placeholder="Ej. 2458-2025"
-                                        autoComplete="off"
-                                    />
-                                </div>
-                                <Button type="submit" className="w-full">
-                                    <FolderSearch className="h-4 w-4 mr-2" />
-                                    Ver registro
-                                </Button>
-                            </form>
-                        </CardContent>
-                        <CardFooter className="flex flex-col gap-2 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-2 justify-center">
-                                <Images className="h-4 w-4" />
-                                <Link
-                                    className="underline underline-offset-2"
-                                    href="/gallery">
-                                    Ver galeria completa
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Card className="hover:shadow-lg transition-shadow border-primary/20">
+                            <CardHeader className="text-center">
+                                <CardTitle className="font-[family-name:var(--font-handwriting)] text-4xl">
+                                    Subir Fotos
+                                </CardTitle>
+                                <CardDescription>
+                                    Comparte tus recuerdos de este día especial con nosotros.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Link href="/upload?repairNumber=BAUTIZO-IAGO-2025&stage=ENTRY">
+                                    <Button className="w-full h-12 text-lg" size="lg">
+                                        <Plus className="h-5 w-5 mr-2" />
+                                        Subir Recuerdos
+                                    </Button>
                                 </Link>
-                            </div>
-                            <p className="text-center">
-                                Comparte el enlace de una orden para que el
-                                cliente vea el estado de su equipo en cualquier
-                                momento.
-                            </p>
-                        </CardFooter>
-                    </Card>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="hover:shadow-lg transition-shadow border-primary/20">
+                            <CardHeader className="text-center">
+                                <CardTitle className="font-[family-name:var(--font-handwriting)] text-4xl">
+                                    Ver Álbum
+                                </CardTitle>
+                                <CardDescription>
+                                    Revive los momentos capturados por todos los invitados.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Link href="/orden?repairNumber=BAUTIZO-IAGO-2025">
+                                    <Button variant="outline" className="w-full h-12 text-lg" size="lg">
+                                        <Images className="h-5 w-5 mr-2" />
+                                        Ver Galería
+                                    </Button>
+                                </Link>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    <div className="text-center text-muted-foreground">
+                        <p className="font-[family-name:var(--font-handwriting)] text-2xl">
+                            Gracias por acompañarnos en este día tan importante.
+                        </p>
+                    </div>
                 </Container>
             </Section>
         </Main>
     );
 }
+
+

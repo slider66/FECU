@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { Playfair_Display } from "next/font/google";
+import { Playfair_Display, Dancing_Script } from "next/font/google";
 import { Lora } from "next/font/google";
 import "./globals.css";
 import { Layout } from "@/components/ds";
-import Header from "@/components/wrapper/Header";
 import Footer from "@/components/wrapper/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/react";
@@ -18,13 +17,18 @@ const playfairDisplay = Playfair_Display({
     subsets: ["latin"],
 });
 
+const dancingScript = Dancing_Script({
+    variable: "--font-handwriting",
+    subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-    title: "Control de Reparaciones",
+    title: "Bautizo de Iago",
     description:
-        "Registro fotografico de ingreso y salida de equipos con evidencia visual en la nube.",
+        "Comparte tus recuerdos del bautizo de Iago.",
     icons: {
-        icon: "/favicon.ico",
-        shortcut: "/favicon.ico",
+        icon: "/favicon.png",
+        shortcut: "/favicon.png",
     },
 };
 
@@ -36,8 +40,7 @@ export default function RootLayout({
     return (
         <Layout>
             <body
-                className={`${lora.variable} ${playfairDisplay.variable} flex flex-col min-h-screen`}>
-                <Header />
+                className={`${lora.variable} ${playfairDisplay.variable} ${dancingScript.variable} flex flex-col min-h-screen`}>
                 {children}
                 <Analytics />
                 <Footer />

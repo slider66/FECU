@@ -113,10 +113,7 @@ export function RepairUploadForm({
     const [isLoading, setIsLoading] = useState(false);
     const [fileInputKey, setFileInputKey] = useState(Date.now());
 
-    const stage = useWatch({
-        control: form.control,
-        name: "stage",
-    });
+
 
     const images = useWatch({
         control: form.control,
@@ -177,10 +174,7 @@ export function RepairUploadForm({
     };
 
     const isFormValid = form.formState.isValid;
-    const stageLabel =
-        stage === "EXIT"
-            ? "Registrar estado de salida"
-            : "Registrar estado de ingreso";
+
 
     return (
         <Card>
@@ -190,68 +184,31 @@ export function RepairUploadForm({
                     className="w-full space-y-6">
                     <CardHeader>
                         <div className="space-y-4">
-                            <FormField
-                                control={form.control}
-                                name="repairNumber"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>
-                                            Numero de reparacion
-                                        </FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                autoComplete="off"
-                                                placeholder="Ej. 2458-2025"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="stage"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Etapa</FormLabel>
-                                        <FormControl>
-                                            <div className="grid grid-cols-2 gap-2">
-                                                {stageOptions.map((option) => (
-                                                    <Button
-                                                        key={option.value}
-                                                        type="button"
-                                                        variant={
-                                                            field.value ===
-                                                            option.value
-                                                                ? "default"
-                                                                : "outline"
-                                                        }
-                                                        onClick={() =>
-                                                            form.setValue(
-                                                                "stage",
-                                                                option.value,
-                                                                {
-                                                                    shouldDirty:
-                                                                        true,
-                                                                    shouldTouch:
-                                                                        true,
-                                                                    shouldValidate:
-                                                                        true,
-                                                                }
-                                                            )
-                                                        }>
-                                                        <Camera className="h-4 w-4 mr-2" />
-                                                        {option.label}
-                                                    </Button>
-                                                ))}
-                                            </div>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                            {/* Hidden fields for internal logic */}
+                            <div className="hidden">
+                                <FormField
+                                    control={form.control}
+                                    name="repairNumber"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="stage"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Input {...field} />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
 
                             <FormField
                                 control={form.control}
@@ -259,12 +216,12 @@ export function RepairUploadForm({
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>
-                                            Tecnico (opcional)
+                                            Tu nombre (opcional)
                                         </FormLabel>
                                         <FormControl>
                                             <Input
                                                 autoComplete="off"
-                                                placeholder="Quien hace el registro"
+                                                placeholder="Para saber quién tomó la foto"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -278,11 +235,11 @@ export function RepairUploadForm({
                                 name="comments"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Comentarios (opcional)</FormLabel>
+                                        <FormLabel>Dedicatoria (opcional)</FormLabel>
                                         <FormControl>
                                             <textarea
                                                 rows={3}
-                                                placeholder="Notas relevantes sobre el equipo o los daños observados"
+                                                placeholder="Escribe un mensaje para Iago..."
                                                 className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:opacity-50"
                                                 {...field}
                                             />
@@ -317,11 +274,11 @@ export function RepairUploadForm({
                                                     const files = event.target.files;
                                                     const clonedFiles = files
                                                         ? Array.from(files, (file) =>
-                                                              new File([file], file.name, {
-                                                                  type: file.type,
-                                                                  lastModified: file.lastModified,
-                                                              })
-                                                          )
+                                                            new File([file], file.name, {
+                                                                type: file.type,
+                                                                lastModified: file.lastModified,
+                                                            })
+                                                        )
                                                         : [];
                                                     onChange(clonedFiles);
                                                 }}
@@ -335,12 +292,12 @@ export function RepairUploadForm({
                                                         </p>
                                                         {images &&
                                                             images.length >
-                                                                0 && (
+                                                            0 && (
                                                                 <p className="text-sm text-muted-foreground">
                                                                     {images.length}{" "}
                                                                     archivo
                                                                     {images.length !==
-                                                                    1
+                                                                        1
                                                                         ? "s"
                                                                         : ""}{" "}
                                                                     listos
@@ -372,7 +329,7 @@ export function RepairUploadForm({
                             ) : (
                                 <>
                                     <Camera className="h-4 w-4 mr-2" />
-                                    {stageLabel}
+                                    Subir Fotos
                                 </>
                             )}
                         </Button>

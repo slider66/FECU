@@ -1,10 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
-import { supabaseAdmin } from "@/utils/supabase/admin";
 import Image from "next/image";
-import { revalidatePath } from "next/cache";
 import { Trash2 } from "lucide-react";
+import { deletePhoto } from "../actions";
 
 type GalleryPhoto = {
     id: string;
@@ -19,29 +18,6 @@ type GalleryPhoto = {
     technician: string | null;
     comments: string | null;
 };
-
-async function deletePhoto(formData: FormData) {
-    "use server";
-
-    const photoId = formData.get("id") as string;
-
-    const photo = await prisma.photo.findUnique({
-        where: { id: photoId },
-    });
-
-    if (!photo) return;
-
-    await supabaseAdmin.storage
-        .from("repair-photos")
-        .remove([photo.bucketPath]);
-
-    await prisma.photo.delete({
-        where: { id: photoId },
-    });
-
-    revalidatePath("/gallery");
-    revalidatePath("/orden");
-}
 
 export async function GalleryComponent() {
     const enableDelete = false;

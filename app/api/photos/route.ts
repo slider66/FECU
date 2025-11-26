@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
         if (!repairNumber) {
             return NextResponse.json(
-                { message: "El numero de reparacion es obligatorio." },
+                { message: "El código del evento es obligatorio." },
                 { status: 400 }
             );
         }

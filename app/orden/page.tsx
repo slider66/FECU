@@ -7,19 +7,16 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { CalendarClock, Download, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "Consultar orden de reparacion",
+    title: "Álbum del Bautizo",
     description:
-        "Busca una orden y revisa las fotos de ingreso y salida del equipo.",
+        "Revisa las fotos del Bautizo de Iago.",
 };
 
 type OrderPageProps = {
@@ -33,16 +30,16 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
         : params.repairNumber;
     const repairNumber = rawRepairNumber
         ? decodeURIComponent(rawRepairNumber)
-        : "";
+        : "BAUTIZO-IAGO-2025"; // Default to event code if missing
 
     const photos = repairNumber
         ? await prisma.photo.findMany({
-              where: { repairNumber },
-              orderBy: [
-                  { stage: "asc" },
-                  { createdAt: "asc" },
-              ],
-          })
+            where: { repairNumber },
+            orderBy: [
+                { stage: "asc" },
+                { createdAt: "asc" },
+            ],
+        })
         : [];
 
     type OrderPhoto = Awaited<typeof photos>[number];
@@ -50,132 +47,94 @@ export default async function OrderPage({ searchParams }: OrderPageProps) {
     const entryPhotos = photos.filter(
         (photo: OrderPhoto) => photo.stage === "ENTRY"
     );
-    const exitPhotos = photos.filter(
-        (photo: OrderPhoto) => photo.stage === "EXIT"
-    );
+    // In this context, we might just want to show all photos together or separate by some logic?
+    // For now, keeping the separation but maybe renaming titles?
+    // "Fotos del Evento" vs "Otros"?
+    // Actually, the upload form defaults to ENTRY stage.
+    // So most photos will be in ENTRY.
+
+    // Let's just show all photos in one gallery if possible, or keep the structure but rename.
+    // Since the upload form hides the stage, it defaults to ENTRY (or whatever the form defaults to).
+    // Let's check the upload form default.
 
     return (
         <Section>
             <Container className="space-y-6 max-w-4xl">
-                <Card>
+                <Card className="border-none shadow-none bg-transparent">
                     <CardHeader className="space-y-2 text-center">
-                        <CardTitle className="text-2xl font-serif">
-                            Consulta de orden
+                        <CardTitle className="text-4xl font-[family-name:var(--font-handwriting)] text-primary">
+                            Álbum de Recuerdos
                         </CardTitle>
-                        <CardDescription>
-                            Ingresa el numero de reparacion para visualizar las
-                            fotos cargadas durante el proceso.
+                        <CardDescription className="text-lg">
+                            Los momentos especiales del Bautizo de Iago.
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <form
-                            action="/orden"
-                            method="GET"
-                            className="flex flex-col gap-3 md:flex-row md:items-end">
-                            <div className="flex-1 space-y-2">
-                                <Label htmlFor="repair-number">
-                                    Numero de reparacion
-                                </Label>
-                                <Input
-                                    id="repair-number"
-                                    name="repairNumber"
-                                    placeholder="Ej. 2458-2025"
-                                    required
-                                    defaultValue={repairNumber}
-                                    autoComplete="off"
-                                />
-                            </div>
-                            <Button type="submit" className="md:w-auto w-full">
-                                Buscar orden
-                            </Button>
-                        </form>
-                    </CardContent>
-                    {repairNumber && (
-                        <CardFooter className="flex flex-col gap-2 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-2 justify-center">
-                                <CalendarClock className="h-4 w-4" />
-                                <span>
-                                    Mostrando informacion para la orden{" "}
-                                    <strong>{repairNumber}</strong>
-                                </span>
-                            </div>
-                            <p className="text-center">
-                                Comparte esta pagina para que el cliente pueda
-                                revisar el estado visual del equipo.
-                            </p>
-                        </CardFooter>
-                    )}
+                    {/* Form removed */}
                 </Card>
 
-                {repairNumber ? (
-                    photos.length > 0 ? (
-                        <div className="space-y-6">
+                {photos.length > 0 ? (
+                    <div className="space-y-8">
+                        {/* We can combine them or show just one gallery if all are ENTRY */}
+                        {entryPhotos.length > 0 && (
                             <StageGallery
-                                title="Ingreso"
-                                description="Evidencia tomada al recibir el equipo."
+                                title="Galería de Fotos"
+                                description="Fotos compartidas por los invitados."
                                 photos={entryPhotos}
-                                emptyMessage="Todavia no hay fotos del ingreso."
+                                emptyMessage=""
                             />
+                        )}
+                        {/* If there are EXIT photos (unlikely for this event but possible if logic changes), show them */}
+                        {photos.filter(p => p.stage === "EXIT").length > 0 && (
                             <StageGallery
-                                title="Salida"
-                                description="Evidencia tomada antes de entregar el equipo."
-                                photos={exitPhotos}
-                                emptyMessage="Todavia no hay fotos de la salida."
+                                title="Otros Momentos"
+                                description=""
+                                photos={photos.filter(p => p.stage === "EXIT")}
+                                emptyMessage=""
                             />
-                            <div className="flex items-center justify-center">
-                                <Button asChild variant="outline">
-                                    <Link
-                                        href={`/upload?repairNumber=${encodeURIComponent(
-                                            repairNumber
-                                        )}`}>
-                                        <Upload className="h-4 w-4 mr-2" />
-                                        Agregar mas fotos
-                                    </Link>
-                                </Button>
-                            </div>
+                        )}
+
+                        <div className="flex items-center justify-center pt-4">
+                            <Button asChild variant="default" size="lg" className="rounded-full">
+                                <Link
+                                    href={`/upload?repairNumber=${encodeURIComponent(
+                                        repairNumber
+                                    )}`}>
+                                    <Upload className="h-4 w-4 mr-2" />
+                                    Subir más fotos
+                                </Link>
+                            </Button>
                         </div>
-                    ) : (
-                        <Card>
-                            <CardHeader className="text-center space-y-2">
-                                <CardTitle className="font-serif text-xl">
-                                    No encontramos registros
-                                </CardTitle>
-                                <CardDescription>
-                                    Aun no hay fotos cargadas para la orden{" "}
-                                    <strong>{repairNumber}</strong>. Sube la
-                                    primera evidencia para comenzar el historial.
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="flex items-center justify-center">
-                                <Button asChild>
-                                    <Link
-                                        href={`/upload?repairNumber=${encodeURIComponent(
-                                            repairNumber
-                                        )}`}>
-                                        <Upload className="h-4 w-4 mr-2" />
-                                        Subir fotos ahora
-                                    </Link>
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    )
+                    </div>
                 ) : (
-                    <Card>
-                        <CardHeader className="space-y-1 text-center">
-                            <CardTitle className="font-serif text-xl">
-                                Esperando una orden
+                    <Card className="bg-white/50 backdrop-blur-sm">
+                        <CardHeader className="text-center space-y-4 py-12">
+                            <div className="flex justify-center">
+                                <Image
+                                    src="/placeholder.svg" // We don't have a specific image, maybe use an icon
+                                    width={200}
+                                    height={200}
+                                    alt="No photos"
+                                    className="opacity-20 hidden" // Hiding placeholder for now
+                                />
+                                <Upload className="h-16 w-16 text-muted-foreground/30" />
+                            </div>
+                            <CardTitle className="font-[family-name:var(--font-handwriting)] text-3xl text-muted-foreground">
+                                Aún no hay fotos
                             </CardTitle>
-                            <CardDescription>
-                                Introduce un numero de reparacion para mostrar
-                                el historial de fotos.
+                            <CardDescription className="text-lg">
+                                Sé el primero en compartir un recuerdo de este día especial.
                             </CardDescription>
                         </CardHeader>
-                        <CardContent className="flex items-center justify-center text-muted-foreground gap-2">
-                            <Download className="h-4 w-4" />
-                            <span>
-                                Cuando completes el formulario se mostrara aqui
-                                el resultado.
-                            </span>
+                        <CardContent className="flex items-center justify-center pb-12">
+                            <Button asChild size="lg" className="rounded-full">
+                                <Link
+                                    href={`/upload?repairNumber=${encodeURIComponent(
+                                        repairNumber
+                                    )}`}>
+                                    <Upload className="h-4 w-4 mr-2" />
+                                    Subir fotos ahora
+                                </Link>
+                            </Button>
                         </CardContent>
                     </Card>
                 )}

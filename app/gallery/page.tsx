@@ -5,9 +5,9 @@ import { GalleryComponent } from "./_components/GalleryComponent";
 import GalleryLoading from "./loading";
 
 export const metadata: Metadata = {
-    title: "Galeria de ordenes",
+    title: "Galería del Bautizo",
     description:
-        "Visualiza todas las fotos subidas para las reparaciones recientes.",
+        "Visualiza todas las fotos del Bautizo de Iago.",
 };
 
 export default function GalleryPage() {
@@ -15,11 +15,10 @@ export default function GalleryPage() {
         <Section>
             <Container className="text-center space-y-2">
                 <h2 className="font-serif text-xl font-semibold">
-                    Galeria general
+                    Galería de Recuerdos
                 </h2>
                 <p className="text-md text-muted-foreground">
-                    Un repaso rapido de las ultimas evidencias cargadas por el
-                    equipo tecnico.
+                    Un repaso rápido de los momentos capturados por familiares y amigos.
                 </p>
             </Container>
             <Suspense fallback={<GalleryLoading />}>
