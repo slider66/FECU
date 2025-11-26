@@ -3,7 +3,7 @@ import { Container, Section } from "@/components/ds";
 import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Trash2 } from "lucide-react";
+import { Trash2, Download } from "lucide-react";
 import Image from "next/image";
 import { logout } from "../login/actions";
 import { deletePhoto } from "./actions";
@@ -67,13 +67,21 @@ export default function AdminPage() {
             <Container className="space-y-6">
                 <div className="flex justify-between items-center">
                     <h1 className="text-2xl font-serif font-bold">Panel de Administración</h1>
-                    <form action={async () => {
-                        "use server";
-                        await logout();
-                        redirect("/login");
-                    }}>
-                        <Button variant="outline">Cerrar Sesión</Button>
-                    </form>
+                    <div className="flex gap-2">
+                        <Button asChild variant="default">
+                            <a href="/api/download-all" download>
+                                <Download className="h-4 w-4 mr-2" />
+                                Descargar Todo
+                            </a>
+                        </Button>
+                        <form action={async () => {
+                            "use server";
+                            await logout();
+                            redirect("/login");
+                        }}>
+                            <Button variant="outline">Cerrar Sesión</Button>
+                        </form>
+                    </div>
                 </div>
                 <p className="text-muted-foreground">
                     Gestiona las fotos del evento. Las fotos eliminadas aquí desaparecerán de la galería pública.
