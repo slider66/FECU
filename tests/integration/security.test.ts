@@ -43,26 +43,26 @@ describe('Security Tests - Authentication & Authorization', () => {
     });
 
     it('should reject login with SQL injection in password', async () => {
-        const result = await login('alex@merle.es', "' OR '1'='1");
+        const result = await login('test@example.com', "' OR '1'='1");
         expect(result.success).toBe(false);
     });
 
     it('should accept login with valid credentials', async () => {
-        const adminEmail = process.env.ADMIN_EMAIL || 'alex@merle.es';
-        const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+        const adminEmail = process.env.ADMIN_EMAIL || 'test@example.com';
+        const adminPassword = process.env.ADMIN_PASSWORD || 'testpassword123';
 
         const result = await login(adminEmail, adminPassword);
         expect(result.success).toBe(true);
     });
 
     it('should reject login with correct email but wrong password', async () => {
-        const adminEmail = process.env.ADMIN_EMAIL || 'alex@merle.es';
+        const adminEmail = process.env.ADMIN_EMAIL || 'test@example.com';
         const result = await login(adminEmail, 'wrongpassword');
         expect(result.success).toBe(false);
     });
 
     it('should be case-sensitive for email', async () => {
-        const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+        const adminPassword = process.env.ADMIN_PASSWORD || 'testpassword123';
         const result = await login('ALEX@MERLE.ES', adminPassword);
         expect(result.success).toBe(false);
     });
@@ -398,8 +398,8 @@ describe('Security Tests - API Endpoint Protection', () => {
 
 describe('Security Tests - Session Management', () => {
     it('should create session with HttpOnly flag', async () => {
-        const adminEmail = process.env.ADMIN_EMAIL || 'alex@merle.es';
-        const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+        const adminEmail = process.env.ADMIN_EMAIL || 'test@example.com';
+        const adminPassword = process.env.ADMIN_PASSWORD || 'testpassword123';
 
         const result = await login(adminEmail, adminPassword);
         expect(result.success).toBe(true);
@@ -415,8 +415,8 @@ describe('Security Tests - Session Management', () => {
     });
 
     it('should clear session on logout', async () => {
-        const adminEmail = process.env.ADMIN_EMAIL || 'alex@merle.es';
-        const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+        const adminEmail = process.env.ADMIN_EMAIL || 'test@example.com';
+        const adminPassword = process.env.ADMIN_PASSWORD || 'testpassword123';
 
         await login(adminEmail, adminPassword);
         await logout();
@@ -457,10 +457,10 @@ describe('Security Tests - OWASP Top 10', () => {
 
     describe('A04:2021 - Insecure Design', () => {
         it('should enforce strong password policy', () => {
-            const defaultPassword = process.env.ADMIN_PASSWORD || 'admin123';
+            const defaultPassword = process.env.ADMIN_PASSWORD || 'testpassword123';
 
             // Warn if using default weak password
-            if (defaultPassword === 'admin123') {
+            if (defaultPassword === 'testpassword123') {
                 console.warn('⚠️  WARNING: Using default weak password. Change in production!');
             }
 

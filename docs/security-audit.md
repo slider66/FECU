@@ -37,11 +37,11 @@ This security audit evaluates the FECU photo management application for common w
 
 **Location**: [`app/login/actions.ts:6-7`](file:///c:/Proyectos/FECU/FECU/app/login/actions.ts#L6-L7)
 
-**Description**: The application uses hardcoded default credentials (`admin123`) when environment variables are not set.
+**Description**: The application should not use hardcoded default credentials when environment variables are not set.
 
 ```typescript
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "alex@merle.es";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@example.com";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "defaultpassword";
 ```
 
 **Risk**: 

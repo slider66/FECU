@@ -172,8 +172,8 @@ export function createPhotoUploadFormData(
  */
 export async function simulateLogin(email: string, password: string): Promise<{ success: boolean }> {
     // This would be replaced with actual API call in integration tests
-    const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'alex@merle.es';
-    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'test@example.com';
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'testpassword123';
 
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
         return { success: true };
