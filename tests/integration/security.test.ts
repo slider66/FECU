@@ -63,7 +63,7 @@ describe('Security Tests - Authentication & Authorization', () => {
 
     it('should be case-sensitive for email', async () => {
         const adminPassword = process.env.ADMIN_PASSWORD || 'testpassword123';
-        const result = await login('ALEX@MERLE.ES', adminPassword);
+        const result = await login('TEST@EXAMPLE.COM', adminPassword);
         expect(result.success).toBe(false);
     });
 
