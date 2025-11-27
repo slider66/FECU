@@ -10,9 +10,14 @@ export const metadata: Metadata = {
         "Visualiza todas las fotos del Bautizo de Iago.",
 };
 
+import { GalleryNavigation } from "@/components/gallery/gallery-navigation";
+
 export default function GalleryPage() {
     return (
         <Section>
+            <Container className="max-w-5xl">
+                <GalleryNavigation />
+            </Container>
             <Container className="text-center space-y-2">
                 <h2 className="font-serif text-xl font-semibold">
                     Galería de Recuerdos
