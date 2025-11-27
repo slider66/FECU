@@ -8,6 +8,15 @@ import JSZip from "jszip";
  */
 export async function GET(req: NextRequest) {
     try {
+        // SECURITY: Verify admin authentication
+        const adminSession = req.cookies.get("admin_session");
+        if (!adminSession || adminSession.value !== "true") {
+            return NextResponse.json(
+                { message: "No autorizado. Debes iniciar sesión como administrador." },
+                { status: 401 }
+            );
+        }
+
         // Fetch all photos from the database
         const photos = await prisma.photo.findMany({
             orderBy: { createdAt: "desc" },

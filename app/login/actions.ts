@@ -3,8 +3,14 @@
 import { cookies } from "next/headers";
 
 export async function login(email: string, pass: string) {
-    const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "alex@merle.es";
-    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+    // SECURITY: Require environment variables, no hardcoded defaults
+    const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+
+    if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+        console.error("SECURITY ERROR: ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment variables");
+        return { success: false };
+    }
 
     if (email === ADMIN_EMAIL && pass === ADMIN_PASSWORD) {
         // Set a simple session cookie
