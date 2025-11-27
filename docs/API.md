@@ -30,26 +30,23 @@ Recibe la carga de imágenes por orden de reparación.
 
 ```json
 {
-  "message": "Se guardaron 3 fotos para la orden 1234 (ingreso).",
-  "repairNumber": "1234",
+  "message": "Se guardaron 12 fotos para la orden BAUTIZO-IAGO-2025 (ingreso).",
+  "repairNumber": "BAUTIZO-IAGO-2025",
   "stage": "ENTRY",
-  "technician": "Ana Perez",
-  "comments": "Golpe en lateral derecho",
-  "imageCount": 3,
+  "technician": "Invitado",
+  "comments": "Fotos de la ceremonia",
+  "imageCount": 12,
   "photos": [
     {
-      "id": "clz...",
-      "filename": "IMG_0001.jpg",
-      "path": "https://...supabase.co/storage/v1/object/public/repair-photos/1234-ENTRY-...",
-      "repairNumber": "1234",
+      "filename": "entrada-BAUTIZO-IAGO-2025-01.jpg",
+      "path": "https://...supabase.co/storage/v1/object/public/repair-photos/...",
+      "repairNumber": "BAUTIZO-IAGO-2025",
       "stage": "ENTRY",
-      "bucketPath": "repair-photos/1234-ENTRY-...",
-      "fileSize": 7340032,
-      "mimeType": "image/jpeg",
-      "technician": "Ana Perez",
-      "comments": "Golpe en lateral derecho",
-      "createdAt": "2025-10-27T22:47:55.533Z"
-    }
+      "bucketPath": "repair-photos/...",
+      "fileSize": 350000,
+      "mimeType": "image/jpeg"
+    },
+    // ... más fotos
   ]
 }
 ```

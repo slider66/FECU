@@ -2,12 +2,12 @@
 
 ## Panorama general
 
-FECU es una aplicación **Next.js 15 (App Router)** orientada a registrar evidencia fotográfica del ingreso y la salida de equipos en un servicio técnico. Se ejecuta como una aplicación monolítica con front-end y API en el mismo repositorio.
+**Bautizo Iago** es una aplicación **Next.js 15 (App Router)** diseñada para recopilar y compartir recuerdos fotográficos del evento. Se ejecuta como una aplicación monolítica optimizada para móviles.
 
 Componentes principales:
 
 - **Front-end React 19** con páginas `app/` (landing, carga, consulta y galería).
-- **API Route `/api/photos`** para recepción de formularios con imágenes.
+- **API Route `/api/photos`** para recepción masiva de imágenes.
 - **Prisma ORM** conectado a **PostgreSQL** (Prisma Accelerate/Direct URL).
 - **Supabase Storage** para persistir los archivos de imagen.
 - **Nodemailer** para notificaciones opcionales vía Gmail.
@@ -15,10 +15,10 @@ Componentes principales:
 ## Flujo de datos
 
 ```
-Usuario → Formulario `/upload`
-        → POST /api/photos
-        → Supabase Storage (imagenes)
-        → Prisma → Postgres (metadatos)
+Usuario → Formulario `/upload` (Compresión Cliente)
+        → POST /api/photos (Multipart)
+        → Supabase Storage (imágenes en paralelo)
+        → Prisma → Postgres (createMany - batch insert)
         → Revalidate { /gallery, /orden }
         → Respuesta JSON + Toast
 ```

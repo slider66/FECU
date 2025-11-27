@@ -1,17 +1,15 @@
-# FECU · Control de reparaciones
+# Bautizo Iago · Galería de Recuerdos
 
-Aplicacion interna para documentar el estado visual de equipos cuando ingresan y salen del servicio tecnico. El sistema organiza evidencias por numero de reparacion, permite capturar fotos desde camara o galeria y facilita la consulta posterior tanto para tecnicos como para clientes.
+Aplicación web para compartir y gestionar las fotos del Bautizo de Iago. Permite a los invitados subir sus recuerdos de forma sencilla y segura, y a los organizadores moderar y visualizar el álbum completo.
 
-## Caracteristicas clave
+## Características clave
 
-- Registro unico de ingreso (`ENTRY`) o salida (`EXIT`) para cada numero de reparacion.
-- Carga simultanea de hasta 12 imagenes (8 MB max) con validacion de tipo y tamano mediante Zod.
-- Captura mobile friendly (`capture="environment"`) y feedback inmediato con sonner.
-- Campo para identificar al tecnico y dejar comentarios/observaciones por cada carga.
-- Almacenamiento en Supabase Storage (bucket `repair-photos`) y persistencia de metadatos via Prisma + Prisma Accelerate (PostgreSQL administrado).
-- Consulta publica por orden en `/orden` agrupando evidencia de ingreso y salida.
-- Galeria general `/gallery` con las ultimas cargas para monitoreo interno.
-- Notificacion opcional via Nodemailer (Gmail) con miniaturas incrustadas.
+- **Subida Optimizada**: Compresión de imágenes en el cliente (ahorro de datos y batería) y subida masiva eficiente.
+- **Experiencia de Usuario**: Barra de progreso real, protección contra cierres accidentales y diseño "mobile-first".
+- **Gestión de Evento**: Identificación automática del evento (`BAUTIZO-IAGO-2025`).
+- **Seguridad**: Panel de administración protegido para moderación de contenido.
+- **Galería Dinámica**: Visualización fluida de fotos con carga diferida.
+- **Notificaciones**: Alertas por correo (opcional) con resumen de nuevas subidas.
 
 ## Stack tecnico
 
