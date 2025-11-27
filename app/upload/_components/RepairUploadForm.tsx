@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,6 +22,8 @@ import {
     CardHeader,
 } from "@/components/ui/card";
 import { Camera, ImageIcon, Loader2 } from "lucide-react";
+import { compressImage } from "./image-compression";
+import { Progress } from "@/components/ui/progress";
 
 const MAX_FILE_SIZE = 1024 * 1024 * 8; // 8MB
 const MAX_FILES = 12;
@@ -111,9 +113,49 @@ export function RepairUploadForm({
     });
 
     const [isLoading, setIsLoading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [statusMessage, setStatusMessage] = useState("");
     const [fileInputKey, setFileInputKey] = useState(Date.now());
 
+    // Prevent accidental navigation during upload
+    useEffect(() => {
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            if (isLoading) {
+                e.preventDefault();
+                e.returnValue = ""; // Chrome requires returnValue to be set
+            }
+        };
 
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, [isLoading]);
+
+    // Request Wake Lock to prevent screen sleep
+    useEffect(() => {
+        let wakeLock: WakeLockSentinel | null = null;
+
+        const requestWakeLock = async () => {
+            if (isLoading && "wakeLock" in navigator) {
+                try {
+                    wakeLock = await navigator.wakeLock.request("screen");
+                } catch (err) {
+                    console.error("Wake Lock error:", err);
+                }
+            }
+        };
+
+        if (isLoading) {
+            requestWakeLock();
+        }
+
+        return () => {
+            if (wakeLock) {
+                wakeLock.release().catch(() => { });
+            }
+        };
+    }, [isLoading]);
 
     const images = useWatch({
         control: form.control,
@@ -123,6 +165,9 @@ export function RepairUploadForm({
     const onSubmit = async (data: FormValues) => {
         try {
             setIsLoading(true);
+            setUploadProgress(0);
+            setStatusMessage("Preparando fotos...");
+
             const formData = new FormData();
 
             formData.append("repairNumber", data.repairNumber);
@@ -135,22 +180,55 @@ export function RepairUploadForm({
                 formData.append("comments", data.comments);
             }
 
-            data.images.forEach((image) => {
+            // Compress and append images
+            setStatusMessage("Comprimiendo imágenes...");
+            const totalImages = data.images.length;
+            const compressedImages = [];
+
+            for (let i = 0; i < totalImages; i++) {
+                const compressed = await compressImage(data.images[i]);
+                compressedImages.push(compressed);
+                // Compression takes up the first 30% of progress
+                setUploadProgress(Math.round(((i + 1) / totalImages) * 30));
+            }
+
+            compressedImages.forEach((image) => {
                 formData.append("images", image);
             });
 
-            const response = await fetch("/api/photos", {
-                method: "POST",
-                body: formData,
+            setStatusMessage("Subiendo a la nube...");
+
+            // Use XMLHttpRequest for upload progress tracking
+            await new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "/api/photos");
+
+                xhr.upload.onprogress = (event) => {
+                    if (event.lengthComputable) {
+                        // Upload takes up the remaining 70% (from 30% to 100%)
+                        const percentComplete = (event.loaded / event.total) * 70;
+                        setUploadProgress(30 + Math.round(percentComplete));
+                    }
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        resolve(JSON.parse(xhr.responseText));
+                    } else {
+                        try {
+                            const errorResponse = JSON.parse(xhr.responseText);
+                            reject(new Error(errorResponse.message || "Error al subir"));
+                        } catch {
+                            reject(new Error("Error al subir las fotos"));
+                        }
+                    }
+                };
+
+                xhr.onerror = () => reject(new Error("Error de red"));
+                xhr.send(formData);
             });
 
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result?.message || "Error al subir las fotos.");
-            }
-
-            toast.success(result.message);
+            toast.success("¡Fotos subidas correctamente!");
             const preservedStage = data.stage;
             const preservedRepair = data.repairNumber;
             form.reset({
@@ -170,6 +248,8 @@ export function RepairUploadForm({
             console.error(error);
         } finally {
             setIsLoading(false);
+            setUploadProgress(0);
+            setStatusMessage("");
         }
     };
 
@@ -311,6 +391,16 @@ export function RepairUploadForm({
                                 </FormItem>
                             )}
                         />
+
+                        {isLoading && (
+                            <div className="mt-4 space-y-2">
+                                <div className="flex justify-between text-sm text-muted-foreground">
+                                    <span>{statusMessage}</span>
+                                    <span>{uploadProgress}%</span>
+                                </div>
+                                <Progress value={uploadProgress} className="h-2" />
+                            </div>
+                        )}
                     </CardContent>
 
                     <CardFooter>
@@ -322,8 +412,7 @@ export function RepairUploadForm({
                             {isLoading ? (
                                 <>
                                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                    Subiendo {images?.length || 0} foto
-                                    {images && images.length !== 1 ? "s" : ""}...
+                                    Subiendo...
                                 </>
                             ) : (
                                 <>

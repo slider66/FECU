@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { Photo, RepairStage } from "@prisma/client";
+import { RepairStage } from "@prisma/client";
 
 export const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -23,7 +23,7 @@ export async function sendMailWithPhotos(
     repairNumber: string,
     stage: RepairStage,
     imageCount: number,
-    photos: Photo[],
+    photos: { filename: string; path: string }[],
     technician?: string | null,
     comments?: string | null
 ) {

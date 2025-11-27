@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
         const stagePrefix = stage === "ENTRY" ? "entrada" : "salida";
         const uploadTimestamp = Date.now();
 
+        // 1. Upload all images to Supabase Storage in parallel
         const uploadPromises = images.map(async (image, index) => {
             const positionSuffix =
                 images.length > 1
@@ -85,52 +86,55 @@ export async function POST(req: NextRequest) {
                 .from("repair-photos")
                 .getPublicUrl(storageFileName);
 
-            return prisma.photo.create({
-                data: {
-                    filename: displayFileName,
-                    path: publicUrl,
-                    repairNumber,
-                    stage,
-                    technician,
-                    comments,
-                    bucketPath: data.path,
-                    fileSize: image.size,
-                    mimeType: image.type,
-                },
-            });
+            return {
+                filename: displayFileName,
+                path: publicUrl,
+                repairNumber,
+                stage,
+                technician,
+                comments,
+                bucketPath: data.path,
+                fileSize: image.size,
+                mimeType: image.type,
+            };
         });
 
-        const uploadedPhotos = await Promise.all(uploadPromises);
+        const photosToInsert = await Promise.all(uploadPromises);
+
+        // 2. Batch insert into PostgreSQL
+        await prisma.photo.createMany({
+            data: photosToInsert,
+        });
 
         revalidatePath("/gallery");
         revalidatePath("/orden");
 
         console.log(
-            `Uploaded ${uploadedPhotos.length} images for ${repairNumber} (${stage}).`
+            `Uploaded ${photosToInsert.length} images for ${repairNumber} (${stage}).`
         );
 
-        try {
-            await sendMailWithPhotos(
-                repairNumber,
-                stage,
-                uploadedPhotos.length,
-                uploadedPhotos,
-                technician,
-                comments
-            );
-        } catch (error) {
+        // 3. Send email (fire and forget to avoid blocking response)
+        // Note: photosToInsert matches the shape expected by sendMailWithPhotos (filename, path)
+        sendMailWithPhotos(
+            repairNumber,
+            stage,
+            photosToInsert.length,
+            photosToInsert,
+            technician,
+            comments
+        ).catch((error) => {
             console.error("Error sending email:", error);
-        }
+        });
 
         return NextResponse.json(
             {
-                message: `Se guardaron ${uploadedPhotos.length} fotos para la orden ${repairNumber} (${stage === "ENTRY" ? "ingreso" : "salida"}).`,
+                message: `Se guardaron ${photosToInsert.length} fotos para la orden ${repairNumber} (${stage === "ENTRY" ? "ingreso" : "salida"}).`,
                 repairNumber,
                 stage,
                 technician,
                 comments,
-                imageCount: uploadedPhotos.length,
-                photos: uploadedPhotos,
+                imageCount: photosToInsert.length,
+                photos: photosToInsert,
             },
             { status: 200 }
         );
