@@ -203,7 +203,7 @@ export function RepairUploadForm({
                 const xhr = new XMLHttpRequest();
                 xhr.open("POST", "/api/photos");
 
-                let startTime = Date.now();
+                const startTime = Date.now();
                 let lastWarningTime = 0;
 
                 xhr.upload.onprogress = (event) => {
