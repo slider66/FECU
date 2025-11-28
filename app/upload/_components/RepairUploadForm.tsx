@@ -203,11 +203,34 @@ export function RepairUploadForm({
                 const xhr = new XMLHttpRequest();
                 xhr.open("POST", "/api/photos");
 
+                let startTime = Date.now();
+                let lastWarningTime = 0;
+
                 xhr.upload.onprogress = (event) => {
                     if (event.lengthComputable) {
                         // Upload takes up the remaining 70% (from 30% to 100%)
                         const percentComplete = (event.loaded / event.total) * 70;
                         setUploadProgress(30 + Math.round(percentComplete));
+
+                        // Calculate speed
+                        const currentTime = Date.now();
+                        const elapsedTime = (currentTime - startTime) / 1000; // seconds
+
+                        if (elapsedTime > 2) { // Wait 2 seconds before checking speed
+                            const speed = event.loaded / elapsedTime; // bytes per second
+
+                            // Threshold: 100KB/s (approx 3G/slow 4G)
+                            // If speed is low and we haven't warned in the last 10 seconds
+                            if (speed < 100 * 1024 && (currentTime - lastWarningTime > 10000)) {
+                                toast.warning("Tu conexión parece lenta. Busca mejor cobertura si la subida se detiene.", {
+                                    duration: 5000,
+                                });
+                                setStatusMessage("Conexión lenta, subiendo...");
+                                lastWarningTime = currentTime;
+                            } else if (speed >= 100 * 1024) {
+                                setStatusMessage("Subiendo a la nube...");
+                            }
+                        }
                     }
                 };
 
@@ -224,7 +247,9 @@ export function RepairUploadForm({
                     }
                 };
 
-                xhr.onerror = () => reject(new Error("Error de red"));
+                xhr.onerror = () => reject(new Error("Error de red. Verifica tu conexión."));
+                xhr.ontimeout = () => reject(new Error("La subida tardó demasiado. Intenta con menos fotos."));
+
                 xhr.send(formData);
             });
 
