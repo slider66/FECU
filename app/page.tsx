@@ -57,7 +57,7 @@ export default function Home() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <Link href="/orden?repairNumber=BAUTIZO-IAGO-2025">
+                                <Link href="/gallery">
                                     <Button variant="outline" className="w-full h-12 text-lg" size="lg">
                                         <Images className="h-5 w-5 mr-2" />
                                         Ver Galería

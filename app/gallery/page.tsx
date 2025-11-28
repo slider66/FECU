@@ -12,6 +12,10 @@ export const metadata: Metadata = {
 
 import { GalleryNavigation } from "@/components/gallery/gallery-navigation";
 
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Home, Upload } from "lucide-react";
+
 export default function GalleryPage() {
     return (
         <Section>
@@ -27,8 +31,23 @@ export default function GalleryPage() {
                 </p>
             </Container>
             <Suspense fallback={<GalleryLoading />}>
-                <Container className="max-w-5xl">
+                <Container className="max-w-5xl space-y-8">
                     <GalleryComponent />
+
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                        <Button asChild variant="outline" size="lg" className="rounded-full w-full sm:w-auto">
+                            <Link href="/">
+                                <Home className="h-4 w-4 mr-2" />
+                                Volver al Inicio
+                            </Link>
+                        </Button>
+                        <Button asChild variant="default" size="lg" className="rounded-full w-full sm:w-auto">
+                            <Link href="/upload">
+                                <Upload className="h-4 w-4 mr-2" />
+                                Subir más fotos
+                            </Link>
+                        </Button>
+                    </div>
                 </Container>
             </Suspense>
         </Section>

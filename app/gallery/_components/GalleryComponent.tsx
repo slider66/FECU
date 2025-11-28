@@ -1,23 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
-import Image from "next/image";
-import { Trash2 } from "lucide-react";
-import { deletePhoto } from "../actions";
-
-type GalleryPhoto = {
-    id: string;
-    filename: string;
-    path: string;
-    createdAt: Date;
-    repairNumber: string;
-    stage: "ENTRY" | "EXIT";
-    bucketPath: string;
-    fileSize: number | null;
-    mimeType: string | null;
-    technician: string | null;
-    comments: string | null;
-};
+import { GalleryGrid } from "@/components/gallery/gallery-grid";
+import { GalleryPhoto } from "@/components/gallery/gallery-types";
 
 export async function GalleryComponent() {
     const enableDelete = false;
@@ -48,67 +32,7 @@ export async function GalleryComponent() {
     return (
         <Card>
             <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {data.map((photo) => {
-                        const stageLabel =
-                            photo.stage === "ENTRY" ? "Ingreso" : "Salida";
-                        const timestamp = photo.createdAt.toLocaleString();
-                        return (
-                            <div
-                                key={photo.id}
-                                className="relative aspect-square rounded-lg overflow-hidden bg-muted">
-                                {enableDelete && (
-                                    <form
-                                        action={deletePhoto}
-                                        className="absolute top-2 right-2 z-10">
-                                        <input
-                                            type="hidden"
-                                            name="id"
-                                            value={photo.id}
-                                        />
-                                        <Button
-                                            variant="destructive"
-                                            size="icon"
-                                            type="submit">
-                                            <Trash2 className="w-4 h-4" />
-                                        </Button>
-                                    </form>
-                                )}
-                                <Image
-                                    src={photo.path}
-                                    alt={photo.filename}
-                                    fill
-                                    className="object-cover"
-                                />
-                                <div className="absolute inset-x-0 bottom-0 px-3 py-2 bg-black/60 text-white text-xs leading-tight space-y-1">
-                                    <div className="flex items-center justify-between gap-2">
-                                        <span className="font-semibold uppercase tracking-wide">
-                                            {stageLabel}
-                                        </span>
-                                        <span className="text-[10px]">
-                                            {timestamp}
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center justify-between gap-2">
-                                        <span className="truncate">
-                                            #{photo.repairNumber}
-                                        </span>
-                                        {photo.technician && (
-                                            <span className="truncate text-[10px] opacity-80">
-                                                {photo.technician}
-                                            </span>
-                                        )}
-                                    </div>
-                                    {photo.comments && (
-                                        <p className="text-[10px] opacity-80 line-clamp-2">
-                                            {photo.comments}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
+                <GalleryGrid photos={data} enableDelete={enableDelete} />
             </CardContent>
         </Card>
     );
